@@ -2,7 +2,17 @@
   q-layout(view="lHh LpR fFf" id="app2")
     q-header( elevated class="bg-primary text-white" height-hint="98")
       q-toolbar(style="justify-content: space-between;")
-        q-btn(dense flat round icon="menu" @click="$store.commit('turnLeftDrawer')")
+        q-btn(dense flat round icon="menu" class="mobile-hide" @click="$store.commit('turnLeftDrawer')")
+        div(class="q-pa-md mobile-only")
+          q-btn(color="primary" icon="menu")
+            q-menu(persistent auto-close)
+              q-list(style="min-width: 100px")
+                q-item(clickable v-ripple to="/drivers")
+                  q-item-section Водители
+
+                q-item(clickable v-ripple to="/doc")
+                  q-item-section Документ
+
         div(class="text-h5" style="margin-left: 20px;") Avtovoz CRM
         q-icon(name="power_settings_new" @click="logOut()")
       q-tabs(align="left")
@@ -37,10 +47,15 @@
               q-icon(name="drive_eta")
             q-item-section Водители
 
-          //- q-item(clickable v-ripple to="/stat")
-          //-   q-item-section(avatar)
-          //-     q-icon(name="bar_chart")
-          //-   q-item-section Статистика
+          q-item(clickable v-ripple to="/doc")
+            q-item-section(avatar)
+              q-icon(name="fa-file-text")
+            q-item-section Документ
+
+          <!--q-item(clickable v-ripple to="/stat")-->
+            <!--q-item-section(avatar)-->
+              <!--q-icon(name="bar_chart")-->
+                <!--q-item-section Статистика-->
     q-page-container
       router-view
 

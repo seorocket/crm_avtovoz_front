@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Order from '../views/Order.vue'
 import Drivers from '../views/Drivers.vue'
 import Stat from '../views/Stat.vue'
+import Doc from '../views/Doc.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,14 @@ const routes = [
     show: true,
     text: 'Водители',
     component: Drivers
+  },
+  {
+    path: '/doc',
+    name: 'Doc',
+    source: 'file-text',
+    show: true,
+    text: 'Документы',
+    component: Doc
   },
   {
     path: '/stat',
