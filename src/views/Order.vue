@@ -98,7 +98,6 @@
             filled
             v-model="data.client.phone"
             label="Телефон"
-            mask="+7 ### ### ## ##"
             fill-mask
             style="max-width: 250px")
 
