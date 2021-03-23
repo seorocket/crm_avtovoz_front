@@ -175,6 +175,10 @@ export default {
         id: 7
       },
       {
+        name: 'Неверный номер',
+        id: 9
+      },
+      {
         name: 'Отказ',
         id: 0
       }],
@@ -203,11 +207,11 @@ export default {
           sortable: false
         },
         {
-          name: 'status_name',
+          name: 'operator',
           required: true,
-          label: 'Статус',
+          label: 'Оператор',
           align: 'left',
-          field: 'status_name',
+          field: row => row.operator,
           sortable: false
         },
         {

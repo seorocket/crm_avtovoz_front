@@ -194,7 +194,7 @@ export default {
       data: {},
       save: false,
       submitting: false,
-      statuses: [{ value: 0, label: 'Отказ' }, { value: 1, label: 'Новая заявка' }, { value: 2, label: 'Расчёт цены' }, { value: 3, label: 'Подписание договора' }, { value: 4, label: 'Первые 50%' }, { value: 5, label: 'Завершена' }, { value: 6, label: 'Перезвонить' }, { value: 7, label: 'Архив' }, { value: 8, label: 'Звонок с сайта' }]
+      statuses: [{ value: 0, label: 'Отказ' }, { value: 1, label: 'Новая заявка' }, { value: 2, label: 'Расчёт цены' }, { value: 3, label: 'Подписание договора' }, { value: 4, label: 'Первые 50%' }, { value: 5, label: 'Завершена' }, { value: 6, label: 'Перезвонить' }, { value: 7, label: 'Архив' }, { value: 8, label: 'Звонок с сайта' }, { value: 9, label: 'Неверный номер' }]
     }
   },
   watch: {
