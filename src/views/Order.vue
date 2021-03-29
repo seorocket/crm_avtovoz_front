@@ -266,10 +266,6 @@ export default {
     filterFn (val, update, abort, url) {
       const vm = this
       setTimeout(() => {
-        if (val.length < 2) {
-          abort()
-          return
-        }
         update(() => {
           if (val === '') {
             this.options = []

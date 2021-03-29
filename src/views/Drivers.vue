@@ -12,7 +12,6 @@
       :data="drivers"
       :columns="columns"
       row-key="name"
-      hide-pagination
       selection="multiple"
       :selected.sync="selected"
     )
@@ -103,7 +102,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 30,
-        max: 5
+        max: 100
         // rowsNumber: xx if getting data from a server
       },
       columns: [
