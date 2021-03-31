@@ -13,6 +13,12 @@
                 q-item(clickable v-ripple to="/doc")
                   q-item-section Документ
 
+                q-item(clickable v-ripple to="/addorder")
+                  q-item-section Добавить заявку
+
+                q-item(clickable v-ripple to="/parking")
+                  q-item-section Стоянки
+
         div(class="text-h5" style="margin-left: 20px;") Avtovoz CRM
         q-icon(name="power_settings_new" @click="logOut()")
       q-tabs(align="left")
@@ -49,8 +55,18 @@
 
           q-item(clickable v-ripple to="/doc")
             q-item-section(avatar)
-              q-icon(name="fa-file-text")
+              q-icon(name="style")
             q-item-section Документ
+          
+          q-item(clickable v-ripple to="/addorder")
+            q-item-section(avatar)
+              q-icon(name="add_task")
+            q-item-section Добавить завяку
+
+          q-item(clickable v-ripple to="/parking")
+            q-item-section(avatar)
+              q-icon(name="local_parking")
+            q-item-section Стоянки
 
           <!--q-item(clickable v-ripple to="/stat")-->
             <!--q-item-section(avatar)-->

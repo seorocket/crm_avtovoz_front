@@ -5,6 +5,8 @@ import Order from '../views/Order.vue'
 import Drivers from '../views/Drivers.vue'
 import Stat from '../views/Stat.vue'
 import Doc from '../views/Doc.vue'
+import AddOrder from '../views/AddOrder.vue'
+import Parking from '../views/Parking.vue'
 
 Vue.use(VueRouter)
 
@@ -38,6 +40,22 @@ const routes = [
     show: true,
     text: 'Документы',
     component: Doc
+  },
+  {
+    path: '/parking',
+    name: 'Parking',
+    source: 'file-text',
+    show: true,
+    text: 'Стоянки',
+    component: Parking
+  },
+  {
+    path: '/addorder',
+    name: 'AddOrder',
+    source: 'file-text',
+    show: true,
+    text: 'Добавить заявку',
+    component: AddOrder
   },
   {
     path: '/stat',
