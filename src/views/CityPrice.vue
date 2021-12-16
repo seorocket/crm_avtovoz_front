@@ -15,7 +15,6 @@
           :pagination.sync="pagination"
           :rows-per-page-options="[0]"
           @virtual-scroll="onScroll"
-          v-on:row-click="openTab"
           style="height: 410px;"
         )
           template(v-slot:loading)

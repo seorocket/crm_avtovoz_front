@@ -54,7 +54,7 @@
       div(class="q-pa-md")
         q-table(
           class="my-sticky-dynamic"
-          title="ЗАКАЗЫ"
+          title="Документы"
           :data="results"
           :columns="columns"
           :loading="loading"
@@ -65,7 +65,6 @@
           :pagination.sync="pagination"
           :rows-per-page-options="[0]"
           @virtual-scroll="onScroll"
-          v-on:row-click="openTab"
           style="height: 410px;"
         )
           template(v-slot:loading)

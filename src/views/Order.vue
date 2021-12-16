@@ -248,8 +248,7 @@ export default {
       vm.tmp = JSON.stringify(response.data)
       vm.old_tmp = JSON.stringify(response.data)
     }).catch((error) => {
-      console.log(error.response.data)
-      this.$store.dispatch('authorize', '')
+      window.location.href = '/';
     })
     router.beforeEach((to, from, next) => {
       if (to.name === 'Order') {
@@ -274,8 +273,7 @@ export default {
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
               vm.options = response.data.results.map(v => ({ label: v.name, value: v.pk }))
             }).catch((error) => {
-              console.log(error.response.data)
-              this.$store.dispatch('authorize', '')
+              window.location.href = '/';
             })
           }
         })
@@ -331,8 +329,7 @@ export default {
             vm.old_tmp = JSON.stringify(response.data)
             vm.submitting = false
           }).catch((error) => {
-            console.log(error.response.data)
-            this.$store.dispatch('authorize', '')
+            window.location.href = '/';
           })
         }, 500)
       }

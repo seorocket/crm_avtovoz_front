@@ -8,6 +8,7 @@
             text-color="black"
             :key="b.name"
             :label="`${b.name}: (${b.rate})`"
+            v-on:click="filter_orders_rate(b.type)"
           )
       template(v-for="b in statuses")
         q-btn(
@@ -145,6 +146,7 @@ export default {
       results: [],
       loading: false,
       current_status: 1,
+      current_rate: '',
       statuses: [{
         name: 'Новые',
         id: 1,
@@ -203,6 +205,14 @@ export default {
           sortable: true
         },
         {
+          name: 'rate',
+          required: true,
+          label: 'Рейтинг',
+          align: 'left',
+          field: 'rate',
+          sortable: false
+        },
+        {
           name: 'auto',
           required: true,
           label: 'Автомобиль',
@@ -248,6 +258,7 @@ export default {
       rate_count: [
        {
          name: '',
+         type: 0,
          rate: 0
        }
       ],
@@ -285,6 +296,11 @@ export default {
       const vm = this
       vm.current_status = status
       vm.update_data('/api/orders/?status=' + vm.current_status, false)
+    },
+    filter_orders_rate (rate) {
+      const vm = this
+      vm.current_rate = rate
+      vm.update_data('/api/orders/?rate=' + vm.current_rate, false)
     },
     filterOrdersStr () {
       const vm = this
