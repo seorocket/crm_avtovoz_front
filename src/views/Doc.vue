@@ -65,6 +65,7 @@
           :pagination.sync="pagination"
           :rows-per-page-options="[0]"
           @virtual-scroll="onScroll"
+          v-on:row-click="openTab"
           style="height: 410px;"
         )
           template(v-slot:loading)
@@ -127,6 +128,7 @@ import { date } from 'quasar'
           label: 'Документ',
           align: 'left',
           field: 'file',
+          format: val => `Скачать`,
           sortable: false
         },
        ],
@@ -178,7 +180,7 @@ import { date } from 'quasar'
       })
     },
      openTab (evt, row, index) {
-      this.$store.dispatch('addOpenTab', row.id)
+      window.open(row.file);
     },
     onScroll ({ to, ref }) {
       const vm = this

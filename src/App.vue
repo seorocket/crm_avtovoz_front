@@ -7,6 +7,9 @@
           q-btn(color="primary" icon="menu")
             q-menu(persistent auto-close)
               q-list(style="min-width: 100px")
+                q-item(clickable v-ripple to="/")
+                  q-item-section Главная
+
                 q-item(clickable v-ripple to="/drivers")
                   q-item-section Водители
 
@@ -46,10 +49,10 @@
 
       q-scroll-area(class="fit")
         q-list(padding)
-          <!--q-item(clickable v-ripple to="/")-->
-            <!--q-item-section(avatar)-->
-              <!--q-icon(name="source")-->
-            <!--q-item-section Задачи-->
+          q-item(clickable v-ripple to="/")
+            q-item-section(avatar)
+              q-icon(name="source")
+            q-item-section Главная
 
           q-item(clickable v-ripple to="/drivers")
             q-item-section(avatar)
