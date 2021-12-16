@@ -1,6 +1,14 @@
 <template lang="pug">
   div(class="q-pa-md")
     div(class="q-pa-md q-gutter-sm")
+      div
+        template(v-for="b in rate_count")
+          q-btn(
+            color="white"
+            text-color="black"
+            :key="b.name"
+            :label="`${b.name}: (${b.rate})`"
+          )
       template(v-for="b in statuses")
         q-btn(
           color="white"
@@ -237,6 +245,12 @@ export default {
           sortable: true
         }
       ],
+      rate_count: [
+       {
+         name: '',
+         rate: 0
+       }
+      ],
       pagination: {
         sortBy: 'desc',
         descending: false,
@@ -298,6 +312,7 @@ export default {
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
         vm.pagination.rowsNumber = response.data.count
+        
         if (update) {
           vm.results = vm.results.concat(vm.page_settings.results)
         } else {
@@ -309,6 +324,9 @@ export default {
         if (error.response.status > 400 && error.response.status < 405) {
           this.$store.dispatch('authorize', '')
         }
+      })
+      vm.Axios.get('/api/orders/get_count_rate/').then(response => {
+         vm.rate_count = response.data
       })
     },
     onScroll ({ to, ref }) {

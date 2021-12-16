@@ -4,7 +4,7 @@
       div(class="q-pa-md")
         q-table(
           class="my-sticky-dynamic"
-          title="Стоянки"
+          title="Стоимость доставки"
           :data="results"
           :columns="columns"
           :loading="loading"
@@ -51,36 +51,36 @@ import { date } from 'quasar'
           sortable: true
         },
         {
-          name: 'city',
+          name: 'from_to',
           required: true,
-          label: 'Город',
+          label: 'Направление',
           align: 'left',
-          field: 'city',
+          field: 'from_to',
           sortable: true
         },
         {
-          name: 'address',
+          name: 'sendan',
           required: true,
-          label: 'Адрес',
+          label: 'Седан',
           align: 'left',
-          field: 'address',
+          field: 'sendan',
           sortable: true
         },
         {
-          name: 'contact',
+          name: 'crossover',
           required: true,
-          label: 'Контакты',
+          label: 'Кроссовер',
           align: 'left',
-          field: 'contact',
-          sortable: true
-        },
-        {
-          name: 'comment',
-          required: true,
-          label: 'Комментарий',
-          align: 'left',
-          field: 'comment',
+          field: 'crossover',
           sortable: true 
+        },
+        {
+          name: 'jeep',
+          required: true,
+          label: 'Джип',
+          align: 'left',
+          field: 'jeep',
+          sortable: true
         },
        ],
        loading: false,
@@ -112,7 +112,7 @@ import { date } from 'quasar'
     vm.update_data()
   },
     methods: {
-      update_data (nextpage = '/api/parking/', update = false) {
+      update_data (nextpage = '/api/city-price/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
