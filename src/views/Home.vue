@@ -105,7 +105,6 @@
           virtual-scroll
           :virtual-scroll-item-size="48"
           :virtual-scroll-sticky-size-start="48"
-          :pagination.sync="pagination"
           :rows-per-page-options="[0]"
           @virtual-scroll="onScroll"
           v-on:row-click="openTab"
