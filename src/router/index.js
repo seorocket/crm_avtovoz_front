@@ -8,6 +8,7 @@ import Doc from '../views/Doc.vue'
 import AddOrder from '../views/AddOrder.vue'
 import Parking from '../views/Parking.vue'
 import CityPrice from '../views/CityPrice.vue'
+import Account from '../views/Account.vue'
 
 Vue.use(VueRouter)
 
@@ -57,6 +58,14 @@ const routes = [
     show: true,
     text: 'Стоимость доставки',
     component: CityPrice
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    source: 'file-text',
+    show: true,
+    text: 'Мой Аккаунт',
+    component: Account
   },
   {
     path: '/addorder',

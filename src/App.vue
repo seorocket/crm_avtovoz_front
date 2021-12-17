@@ -21,9 +21,12 @@
 
                 q-item(clickable v-ripple to="/parking")
                   q-item-section Стоянки
-
+                
                 q-item(clickable v-ripple to="/city-price")
                   q-item-section Стоимость доставки
+    
+                q-item(clickable v-ripple to="/account")
+                  q-item-section Мой аккаунт
 
         div(class="text-h5" style="margin-left: 20px;") Avtovoz CRM
         q-icon(name="power_settings_new" @click="logOut()")
@@ -78,6 +81,12 @@
             q-item-section(avatar)
               q-icon(name="shuffle")
             q-item-section Стоимость доставки
+
+          q-item(clickable v-ripple to="/account")
+            q-item-section(avatar)
+              q-icon(name="person")
+            q-item-section Мой аккаунт
+                
 
           <!--q-item(clickable v-ripple to="/stat")-->
             <!--q-item-section(avatar)-->
