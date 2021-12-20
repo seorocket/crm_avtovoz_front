@@ -1,5 +1,6 @@
 <template lang="pug">
   div(class="q-pa-md")
+    q-btn.q-mb-md(color="primary" label="Добавить стоимость" @click="price_form = true")
     template
       div(class="q-pa-md")
         q-table(
@@ -20,6 +21,62 @@
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
 
+    q-dialog(
+      v-model="price_form"
+      persistent
+      )
+      q-card
+        q-card-section(class="row items-center")
+          span(class="q-ml-sm text-h6") Добавить водителя
+        q-card-section(class="row items-center")
+            q-select(
+              v-model="price.direction_from"
+              label="Откуда"
+              :options="options_city"
+              style="width: 100%; margin-bottom: 10px"
+            )
+            q-select(
+              v-model="price.direction_to"
+              label="Куда"
+              :options="options_city"
+              style="width: 100%; margin-bottom: 10px; padding-bottom: 0;"
+            )
+            q-input(
+              v-model="price.sendan"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Цена седан"
+              stack-label
+              autogrow
+            )
+            q-input(
+              v-model="price.jeep"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Джип"
+              stack-label
+              autogrow
+            )
+            q-input(
+              v-model="price.crossover"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Кроссовер"
+              stack-label
+              autogrow
+            )
+            q-btn(
+              flat
+              label="Создать"
+              color="primary"
+              v-on:click="createPrice()"
+            )
+            q-btn(
+              flat
+              label="Отмена"
+              color="primary"
+              v-on:click="price_form = false"
+            )
 </template>
 <script>
 import { mapState } from 'vuex'
@@ -27,6 +84,7 @@ import { date } from 'quasar'
   export default {
     data(){
       return {
+       price_form: false,
        options: [],
        page_settings: {
         next: null,
@@ -38,8 +96,16 @@ import { date } from 'quasar'
         count: 0,
         first: 0,
         last: 0,
-        counts: {}
+        counts: {}       
       },
+      options_city:[],
+       price: {
+         crossover: '',
+         direction_from: '',
+         direction_to: '',
+         jeep: '',
+         sendan: ''
+       },
        results: [],
        columns: [
         {
@@ -109,6 +175,12 @@ import { date } from 'quasar'
     vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
     vm.Axios.defaults.baseURL = 'http://157.90.25.192:8001'
     vm.update_data()
+    vm.Axios.get('/api/cities/').then(response => {
+      const data = response.data.results
+      for (const item in data) {
+        vm.options_city.push({'label': data[item].name, 'value': data[item].pk})
+      }
+    });
   },
     methods: {
       update_data (nextpage = '/api/city-price/', update = false) {
@@ -128,6 +200,15 @@ import { date } from 'quasar'
           this.$store.dispatch('authorize', '')
         }
       })
+    },
+    createPrice(){
+      const vm = this
+      console.log(vm.price)
+       vm.Axios.post('/api/city-price/add_price/', vm.price).then(response => {
+         console.log(response);
+         vm.price_form = false;
+         vm.update_data()
+       })
     },
      openTab (evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)
