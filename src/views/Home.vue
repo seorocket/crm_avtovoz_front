@@ -107,9 +107,12 @@
           :virtual-scroll-sticky-size-start="48"
           :rows-per-page-options="[0]"
           @virtual-scroll="onScroll"
-          v-on:row-click="openTab"
           style="height: 410px;"
         )
+          template(#body-cell-action="props")
+            q-td
+              q-btn(dense flat round color="blue" field="edit" label="В работу" @click="inWorck(props.row)")
+
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
 
@@ -157,6 +160,11 @@ export default {
         alias: 'from_call'
       },
       {
+        name: 'В работе',
+        id: 10,
+        alias: 'work'
+      },
+      {
         name: 'Расчёт цены',
         id: 2,
         alias: 'price_calculate'
@@ -173,19 +181,28 @@ export default {
       },
       {
         name: 'Завершена',
-        id: 5
+        id: 5,
+        alias: 'ended'
       },
       {
         name: 'Перезвонить',
-        id: 6
+        id: 6,
+        alias: 'recall'
       },
       {
         name: 'Архив',
-        id: 7
+        id: 7,
+        alias: 'archive'
+      },
+      {
+        name: 'Не верный номер',
+        id: 9,
+        alias: 'notnumber'
       },
       {
         name: 'Отказ',
-        id: 0
+        id: 0,
+        alias: 'decline'
       }],
       columns: [
         {
@@ -252,6 +269,12 @@ export default {
           field: row => row.datetime,
           format: val => date.formatDate(val, 'DD.MM.YYYY HH:mm'),
           sortable: true
+        },
+        {
+          name: "action",
+          align: "right",
+          label: "Action",
+          field: "action"
         }
       ],
       rate_count: [
@@ -295,6 +318,12 @@ export default {
       const vm = this
       vm.current_status = status
       vm.update_data('/api/orders/?status=' + vm.current_status, false)
+    },
+    inWorck(row){
+       const vm = this
+       vm.Axios.post('/api/orders/set_in_work/', {'id': row.id}).then(response => {
+         console.log(response.data);
+       });
     },
     filter_orders_rate (rate) {
       const vm = this
