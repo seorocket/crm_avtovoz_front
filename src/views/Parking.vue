@@ -1,5 +1,6 @@
 <template lang="pug">
   div(class="q-pa-md")
+    q-btn.q-mb-md(color="primary" label="Добавить стоянку" @click="parking_form = true")
     template
       div(class="q-pa-md")
         q-table(
@@ -17,9 +18,71 @@
           @virtual-scroll="onScroll"
           style="height: 410px;"
         )
+          template(#body-cell-contact="props")
+            q-td
+              div( v-html="props.row.contact")
+
+          template(#body-cell-comment="props")
+            q-td
+              div( v-html="props.row.comment")
+
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
-
+    q-dialog(
+      v-model="parking_form"
+      persistent
+      )
+      q-card
+        q-card-section(class="row items-center")
+          span(class="q-ml-sm text-h6") Добавить стоянку
+        q-card-section(class="row items-center")
+            q-input(
+              v-model="parking.city"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Город"
+              stack-label
+              autogrow
+            )
+            q-input(
+              v-model="parking.address"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Адрес"
+              stack-label
+              type="textarea"
+              autogrow
+            )
+            q-input(
+              v-model="parking.contact"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Контакты"
+              type="textarea"
+              stack-label
+              autogrow
+            )
+            q-input(
+              v-model="parking.comment"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              type="textarea"
+              label="Комментарий"
+              stack-label
+              autogrow
+            )
+            q-btn(
+              flat
+              label="Создать"
+              color="primary"
+              v-on:click="createParking()"
+            )
+            q-btn(
+              flat
+              label="Отмена"
+              color="primary"
+              v-on:click="parking_form = false"
+            )
 </template>
 <script>
 import { mapState } from 'vuex'
@@ -40,7 +103,14 @@ import { date } from 'quasar'
         last: 0,
         counts: {}
       },
+       parking_form: false,
        results: [],
+       parking: {
+         city:'',
+         address: '',
+         contact: '',
+         comment: ''
+       },
        columns: [
         {
           name: 'id',
@@ -128,6 +198,14 @@ import { date } from 'quasar'
           this.$store.dispatch('authorize', '')
         }
       })
+    },
+    createParking(){
+      const vm = this
+       vm.Axios.post('/api/parking/', vm.parking).then(response => {
+         console.log(response);
+         vm.parking_form = false;
+         vm.update_data()
+       })
     },
      openTab (evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)

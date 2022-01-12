@@ -21,7 +21,10 @@
 
                 q-item(clickable v-ripple to="/parking")
                   q-item-section Стоянки
-                
+
+                q-item(clickable v-ripple to="/rate")
+                  q-item-section Рейтинг направлений                
+
                 q-item(clickable v-ripple to="/city-price")
                   q-item-section Стоимость доставки
     
@@ -76,6 +79,11 @@
             q-item-section(avatar)
               q-icon(name="local_parking")
             q-item-section Стоянки
+
+          q-item(clickable v-ripple to="/rate")
+            q-item-section(avatar)
+              q-icon(name="star_rate")
+            q-item-section Рейтинг направлений
 
           q-item(clickable v-ripple to="/city-price")
             q-item-section(avatar)
@@ -175,6 +183,15 @@ export default {
         // intended for switching drawer to "normal" mode only
         e.stopPropagation()
       }
+    },
+    showNotify (position, message, color) {
+      this.$q.notify({
+        color: color, 
+        textColor: 'white', 
+        message: message, 
+        position: position,
+        timeout: 3000
+      })
     },
     logOut () {
       const vm = this

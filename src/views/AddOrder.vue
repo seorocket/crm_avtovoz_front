@@ -150,26 +150,25 @@ import { date } from 'quasar'
     this.loading = true
     vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
     vm.Axios.defaults.baseURL = 'http://157.90.25.192:8001'
+    vm.Axios.get('/api/operator/').then(response => {
+      vm.options = response.data.results.map(v => ({ label: v.username, value: v.pk }))
+      console.log(vm.options)
+    }).catch((error) => {
+       console.log(error)
+    })
+    console.log(vm.options)
   },
     methods: {
     filterFn (val, update, abort, url) {
         const vm = this
         setTimeout(() => {
-          if (val.length < 2) {
-            abort()
-            return
-          }
         update(() => {
-          if (val === '') {
-            this.options = []
-          } else {
             const needle = val.toLowerCase()
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
               vm.options = response.data.results.map(v => ({ label: v.username, value: v.pk }))
             }).catch((error) => {
                console.log(error)
             })
-          }
         })
       }, 250)
     },
@@ -180,8 +179,8 @@ import { date } from 'quasar'
         vm.createOrder_data.status = vm.createOrder_data.status.value
         vm.createOrder_data.operator = vm.createOrder_data.operator.value
         vm.Axios.post('api/create-order/', vm.createOrder_data).then(response => {
-          vm.showNotify('top-right', response.data.message, 'positive')
           vm.submitting = false
+          this.$store.dispatch('addOpenTab', response.data.pk)    
         })
       }
     },

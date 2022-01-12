@@ -106,6 +106,15 @@ export default {
         vm.popup.edit_ac = false;
      });
     },
+    showNotify (position, message, color) {
+      this.$q.notify({
+        color: color, 
+        textColor: 'white', 
+        message: message, 
+        position: position,
+        timeout: 3000
+      })
+    },
     updateAc(id){
       const vm = this
       vm.Axios.post('/api/operator/update_ac/', vm.user).then(response => {
@@ -113,6 +122,7 @@ export default {
         vm.Axios.post('/api/operator/authorize/').then(response => {
           vm.user = response.data;
            vm.popup.edit_ac = false;
+           vm.showNotify('top-right', 'Данные обновлены', 'positive')
         });
       });
     }

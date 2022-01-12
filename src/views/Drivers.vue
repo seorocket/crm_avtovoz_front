@@ -107,7 +107,7 @@ export default {
       },
       columns: [
         { name: 'name', align: 'left', label: 'Имя', field: 'name', sortable: true },
-        { name: 'phone', align: 'center', label: 'Телефон', field: 'phone', sortable: true },
+        { name: 'phone', align: 'center', label: 'Телефон', field:'phone', sortable: true},
         { name: 'info', align: 'center', label: 'Инфо', field: 'info' },
         { name: 'comment', label: 'Комментарий', field: 'comment' }
       ]

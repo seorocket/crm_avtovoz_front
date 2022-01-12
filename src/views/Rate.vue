@@ -1,12 +1,11 @@
 <template lang="pug">
   div(class="q-pa-md")
-    q-btn.q-mb-md(color="primary" label="Добавить стоимость" @click="price_form = true")
-    q-btn.q-mb-md(color="primary" label="Добавить город" @click="city_form = true")
+    q-btn.q-mb-md(color="primary" label="Добавить рейтинг направления" @click="rate_form = true")
     template
       div(class="q-pa-md")
         q-table(
           class="my-sticky-dynamic"
-          title="Стоимость доставки"
+          title="Рейтинг направления"
           :data="results"
           :columns="columns"
           :loading="loading"
@@ -21,140 +20,37 @@
         )
           template(#body-cell-action="props")
             q-td
-              q-btn(dense flat round color="blue" field="edit" label="Изменить" @click="editPrice(props.row)")
+              q-btn(dense flat round color="blue" field="edit" label="Изменить" @click="editRate(props.row)")
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
 
     q-dialog(
-      v-model="city_form"
+      v-model="rate_form"
       persistent
       )
       q-card
         q-card-section(class="row items-center")
-          span(class="q-ml-sm text-h6") Добавить город
+          span(class="q-ml-sm text-h6") Добавить рейтинг направления
         q-card-section(class="row items-center")
-            q-input(
-              v-model="citys"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
+            q-select(
+              v-model="rate.city"
               label="Город"
-              stack-label
-              autogrow
-            )
-            q-btn(
-              flat
-              label="Добавить"
-              color="primary"
-              v-on:click="addCity()"
-            )
-            q-btn(
-              flat
-              label="Отмена"
-              color="primary"
-              v-on:click="city_form = false"
-            )
-
-    q-dialog(
-      v-model="edit_price_form"
-      persistent
-      )
-      q-card
-        q-card-section(class="row items-center")
-          span(class="q-ml-sm text-h6") Редактировать стоимость
-        q-card-section(class="row items-center")
-            q-input(
-              v-model="price.sendan"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Цена седан"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.jeep"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Джип"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.crossover"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Кроссовер"
-              stack-label
-              autogrow
-            )
-            q-btn(
-              flat
-              label="Обновить"
-              color="primary"
-              v-on:click="updatePrice()"
-            )
-            q-btn(
-              flat
-              label="Отмена"
-              color="primary"
-              v-on:click="edit_price_form = false"
-            )    
-
-
-    q-dialog(
-      v-model="price_form"
-      persistent
-      )
-      q-card
-        q-card-section(class="row items-center")
-          span(class="q-ml-sm text-h6") Добавить стоимость
-        q-card-section(class="row items-center")
-            q-select(
-              filled
-              v-model="price.direction_from"
-              hide-selected
-              use-input
-              fill-input
-              input-debounce="0"
-              label="Откуда"
               :options="options_city"
-              @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              @filter-abort="abortFilterFn"
               style="width: 100%; margin-bottom: 10px"
             )
-            q-select(
-              filled
-              hide-selected
-              use-input
-              fill-input
-              input-debounce="0"
-              v-model="price.direction_to"
-              label="Куда"
-              :options="options_city"
-              @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              @filter-abort="abortFilterFn"
-              style="width: 100%; margin-bottom: 10px; padding-bottom: 0;"
-            )
-            q-input(
-              v-model="price.sendan"
+            q-checkbox(
+              v-model="rate.direction"
               outlined
               style="width: 100%; margin-bottom: 10px"
-              label="Цена седан"
+              label="Из этого города?"
               stack-label
               autogrow
             )
             q-input(
-              v-model="price.jeep"
+              v-model="rate.rate"
               outlined
               style="width: 100%; margin-bottom: 10px"
-              label="Джип"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.crossover"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Кроссовер"
+              label="Рейтинг"
               stack-label
               autogrow
             )
@@ -162,13 +58,13 @@
               flat
               label="Создать"
               color="primary"
-              v-on:click="createPrice()"
+              v-on:click="createRate()"
             )
             q-btn(
               flat
               label="Отмена"
               color="primary"
-              v-on:click="price_form = false"
+              v-on:click="rate_form = false"
             )
 </template>
 <script>
@@ -177,8 +73,8 @@ import { date } from 'quasar'
   export default {
     data(){
       return {
-       price_form: false,
-       edit_price_form: false,
+       rate_form: false,
+       edit_rate_form: false,
        city_form: false,
        options: [],
        page_settings: {
@@ -194,13 +90,11 @@ import { date } from 'quasar'
         counts: {}       
       },
       options_city:[],
-       price: {
+       rate: {
          pk: '',
-         crossover: '',
-         direction_from: '',
-         direction_to: '',
-         jeep: '',
-         sendan: ''
+         city: '',
+         direction: '',
+         rate: '',
        },
        results: [],
        citys: '',
@@ -209,40 +103,32 @@ import { date } from 'quasar'
           name: 'id',
           align: 'left',
           label: 'ID',
-          field: 'id',
+          field: 'pk',
           sortable: true
         },
         {
-          name: 'from_to',
+          name: 'city',
           required: true,
-          label: 'Направление',
+          label: 'Город',
           align: 'left',
-          field: 'from_to',
+          field: 'citys',
           sortable: true
         },
         {
-          name: 'sendan',
+          name: 'directions',
           required: true,
-          label: 'Седан',
+          label: 'Из этого города',
           align: 'left',
-          field: 'sendan',
+          field: 'directions',
           sortable: true
         },
         {
-          name: 'crossover',
+          name: 'rate',
           required: true,
-          label: 'Кроссовер',
+          label: 'Рейтинг',
           align: 'left',
-          field: 'crossover',
+          field: 'rate',
           sortable: true 
-        },
-        {
-          name: 'jeep',
-          required: true,
-          label: 'Джип',
-          align: 'left',
-          field: 'jeep',
-          sortable: true
         },
         {
           name: "action",
@@ -290,37 +176,28 @@ import { date } from 'quasar'
          }
         });
       },
-      update_data (nextpage = '/api/city-price/', update = false) {
+      update_data (nextpage = '/api/rate/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
-        vm.page_settings = response.data
-        vm.pagination.rowsNumber = response.data.count
-        if (update) {
-          vm.results = vm.results.concat(vm.page_settings.results)
-        } else {
-          vm.results = vm.page_settings.results
-        }
+        vm.results = response.data
         vm.loading = false
       }).catch((error) => {
         console.log(error.response)
-        if (error.response.status > 400 && error.response.status < 405) {
-          this.$store.dispatch('authorize', '')
-        }
       })
     },
-    editPrice(row){
+    editRate(row){
      const vm = this
-     vm.price.pk = row.pk
-     vm.price.sendan = row.sendan
-     vm.price.jeep = row.jeep
-     vm.price.crossover = row.crossover
-     vm.edit_price_form = true;
+     vm.rate.pk = row.pk
+     vm.rate.city = row.city
+     vm.rate.direction = row.direction
+     vm.rate.rate = row.rate
+     vm.edit_rate_form = true;
     },
     updatePrice(){
       const vm = this
        vm.Axios.post('/api/city-price/update_price/', vm.price).then(response => {
          console.log(response);
-         vm.edit_price_form = false;
+         vm.edit_rate_form = false;
          vm.id = ''
          vm.price.sendan = ''
          vm.price.jeep = ''
@@ -348,11 +225,11 @@ import { date } from 'quasar'
          get_city_opt();
        })
     },
-    createPrice(){
+    createRate(){
       const vm = this
-       vm.Axios.post('/api/city-price/add_price/', vm.price).then(response => {
+       vm.Axios.post('/api/rate/add_rate/', vm.rate).then(response => {
          console.log(response);
-         vm.price_form = false;
+         vm.rate_form = false;
          vm.update_data()
          vm.showNotify('top-right', 'Данные добавлены', 'positive')
        })
