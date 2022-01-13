@@ -128,9 +128,7 @@
             fill-input
             input-debounce="0"
             label="Водитель автовоза"
-            :options="options"
-            @filter="(val, update, abort) => filterFn(val, update, abort, 'drivers')"
-            @filter-abort="abortFilterFn"
+            :options="options_driver"
             style="width: 250px"
             :clearable="true"
           )
@@ -188,6 +186,7 @@ export default {
       current_page_id: router.currentRoute.params.id,
       model: null,
       options: [],
+      options_driver: [],
       tmp: '',
       old_tmp: '',
       data: {},
@@ -250,6 +249,12 @@ export default {
     }).catch((error) => {
       window.location.href = '/';
     })
+    vm.Axios.get('/api/drivers/').then(response => {
+        const data = response.data.results
+         for (const item in data) {
+          vm.options_driver.push({'label': data[item].name, 'value': data[item].pk})
+         }
+        });
     router.beforeEach((to, from, next) => {
       if (to.name === 'Order') {
         vm.Axios.get('/api/orders/' + to.params.id + '/').then(response => {
