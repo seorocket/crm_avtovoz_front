@@ -131,7 +131,7 @@ export default {
   beforeMount () {
     const vm = this
     vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'http://157.90.25.192:8001'
+    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.updateDrivers()
   },
   methods: {

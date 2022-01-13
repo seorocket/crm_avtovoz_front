@@ -149,7 +149,7 @@ import { date } from 'quasar'
     const vm = this
     this.loading = true
     vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'http://157.90.25.192:8001'
+    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.Axios.get('/api/operator/').then(response => {
       vm.options = response.data.results.map(v => ({ label: v.username, value: v.pk }))
       console.log(vm.options)
