@@ -25,6 +25,44 @@
             q-inner-loading(showing color="primary")
 
     q-dialog(
+      v-model="edit_rate_form"
+      persistent
+      )
+      q-card
+        q-card-section(class="row items-center")
+          span(class="q-ml-sm text-h6") Изменить рейтинг направления
+        q-card-section(class="row items-center")
+            q-checkbox(
+              v-model="rate.direction"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Из этого города?"
+              stack-label
+              autogrow
+            )
+            q-input(
+              v-model="rate.rate"
+              outlined
+              style="width: 100%; margin-bottom: 10px"
+              label="Рейтинг"
+              stack-label
+              autogrow
+            )
+            q-btn(
+              flat
+              label="Создать"
+              color="primary"
+              v-on:click="updateRate()"
+            )
+            q-btn(
+              flat
+              label="Отмена"
+              color="primary"
+              v-on:click="edit_rate_form = false"
+            )
+
+
+    q-dialog(
       v-model="rate_form"
       persistent
       )
@@ -32,11 +70,13 @@
         q-card-section(class="row items-center")
           span(class="q-ml-sm text-h6") Добавить рейтинг направления
         q-card-section(class="row items-center")
-            q-select(
+            q-input(
               v-model="rate.city"
-              label="Город"
-              :options="options_city"
+              outlined
               style="width: 100%; margin-bottom: 10px"
+              label="Город"
+              stack-label
+              autogrow
             )
             q-checkbox(
               v-model="rate.direction"
@@ -193,15 +233,14 @@ import { date } from 'quasar'
      vm.rate.rate = row.rate
      vm.edit_rate_form = true;
     },
-    updatePrice(){
+    updateRate(){
       const vm = this
-       vm.Axios.post('/api/city-price/update_price/', vm.price).then(response => {
-         console.log(response);
+       vm.Axios.post('/api/rate/update_rate/', vm.rate).then(response => {
          vm.edit_rate_form = false;
-         vm.id = ''
-         vm.price.sendan = ''
-         vm.price.jeep = ''
-         vm.price.crossover = ''
+         vm.rate.pk = ''
+         vm.rate.city = ''
+         vm.rate.direction = ''
+         vm.rate.rate = ''
          vm.update_data()
          vm.showNotify('top-right', 'Данные обновлены', 'positive')
        })

@@ -110,11 +110,14 @@
           style="height: 410px;"
         )
           template(#body-cell-action="props")
-            q-td
+            q-td(v-if='props.row.status.value < 2')
               q-btn(dense flat round color="blue" field="edit" label="В работу" @click="inWorck(props.row)")
+            q-td(v-if='props.row.status.value > 1')
+              q-btn(dense flat round color="blue" field="edit" label="Посмотреть" @click="openTab(props.row)")
 
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
+        
 
 </template>
 
@@ -251,7 +254,7 @@ export default {
           align: 'left',
           field: row => row.client.phone,
           format: val => val,
-          sortable: false
+          sortable: false,
         },
         {
           name: 'site_name',
@@ -324,6 +327,7 @@ export default {
        vm.Axios.post('/api/orders/set_in_work/', {'id': row.id}).then(response => {
          console.log(response.data);
        });
+       vm.openTab(row);
     },
     filter_orders_rate (rate) {
       const vm = this
@@ -362,6 +366,11 @@ export default {
         } else {
           vm.results = vm.page_settings.results
         }
+        vm.results.forEach((value, key, map) => {
+            if(value.status.value < 2){
+             value.client.phone='';
+            }
+        });
         vm.loading = false
       }).catch((error) => {
         if (error.response.status > 400 && error.response.status < 405) {
@@ -387,7 +396,7 @@ export default {
         })
       }
     },
-    openTab (evt, row, index) {
+    openTab (row) {
       this.$store.dispatch('addOpenTab', row.id)
     }
   }
