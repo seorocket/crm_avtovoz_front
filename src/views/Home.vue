@@ -110,7 +110,7 @@
           style="height: 410px;"
         )
           template(#body-cell-action="props")
-            q-td(v-if='[1, 8].indexOf(props.row.status.value) && !props.row.operator')
+            q-td(v-if='!!~[1, 8].indexOf(props.row.status.value) && !props.row.operator')
               q-btn(dense flat round color="blue" field="edit" label="В работу" @click="inWorck(props.row)")
             q-td(v-else)
               q-btn(dense flat round color="blue" field="edit" label="Посмотреть" @click="openTab(props.row)")
@@ -320,11 +320,25 @@ export default {
       vm.current_status = status
       vm.update_data(`/api/orders/?status=${vm.current_status}&operator=${1}`, false)
     },
+    showNotify (position, message, color) {
+      this.$q.notify({
+        color: color,
+        textColor: 'white',
+        message: message,
+        position: position,
+        timeout: 3000
+      })
+    },
     inWorck(row){
       const vm = this
       vm.Axios.post(`/api/orders/${row.id}/set_in_work/`).then(response => {
+        if (response.data.status == false) {
+          vm.showNotify('top-right', response.data.message, 'red')
+          vm.update_data()
+        } else {
+          vm.openTab(row)
+        }
       })
-      vm.openTab(row)
     },
     filter_orders_rate (rate) {
       const vm = this
