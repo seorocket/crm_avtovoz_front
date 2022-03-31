@@ -110,9 +110,9 @@
           style="height: 410px;"
         )
           template(#body-cell-action="props")
-            q-td(v-if='props.row.status.value < 2')
+            q-td(v-if='[1, 8].indexOf(props.row.status.value) && !props.row.operator')
               q-btn(dense flat round color="blue" field="edit" label="В работу" @click="inWorck(props.row)")
-            q-td(v-if='props.row.status.value > 1')
+            q-td(v-else)
               q-btn(dense flat round color="blue" field="edit" label="Посмотреть" @click="openTab(props.row)")
 
           template(v-slot:loading)
