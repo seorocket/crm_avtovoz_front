@@ -7,7 +7,7 @@ import router from '../router/index.js'
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.prototype.Axios = Axios
-Vue.prototype.Axios.defaults.baseURL = 'http://127.0.0.1:8000'
+Vue.prototype.Axios.defaults.baseURL = 'http://157.90.25.192/'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
