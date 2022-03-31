@@ -2,25 +2,18 @@
   div
     div.row
       div.q-pa-md
-        div Имя: {{user.name}}
-        div Фамилия: {{user.lastname}}
+        div Имя: {{user.first_name}}
+        div Фамилия: {{user.last_name}}
         div Телефон: {{user.phone}}
         div Телеграм: {{user.telegram}}
-        div Кол-во активных заявок: {{user.active}}
-        div Кол-во завершенных заявок: {{user.success}}
-        div Общее количество заработанных средств(грязынми и чистыми): {{user.money}}
-        div Кол-во активных заявок за текущий месяц: {{user.active_month}}
-        div Кол-во завершенных заявок за текущий месяц: {{user.success_month}}
-        div Общее количество заработанных средств(грязынми и чистыми) за месяц: {{user.money_month}}
-        div Token телеграм: {{user.token}}
         q-btn(
           flat
           label="Изменить"
           color="primary"
-          v-on:click="popup.edit_ac = true"
+          v-on:click="popup.edit_popup = true"
           )
     q-dialog(
-      v-model="popup.edit_ac"
+      v-model="popup.edit_popup"
       persistent
       )
       q-card
@@ -29,22 +22,22 @@
         q-card-section(class="row items-center")
             q-input(
               label="Имя"
-              :value="text"
+              :value="user.first_name"
               style="width: 100%"
-              v-model="user.name")
+              v-model="user.first_name")
             q-input(
               label="Фамилия"
-              :value="text"
+              :value="user.last_name"
               style="width: 100%"
-              v-model="user.lastname")
+              v-model="user.last_name")
             q-input(
               label="Телефон"
-              :value="text"
+              :value="user.phone"
               style="width: 100%"
               v-model="user.phone")
             q-input(
               label="Телеграм"
-              :value="text"
+              :value="user.telegram"
               style="width: 100%"
               v-model="user.telegram")
         q-card-section(class="row items-center")
@@ -52,36 +45,30 @@
               flat
               label="Изменить"
               color="primary"
-              v-on:click="updateAc(user.id)"
+              v-on:click="updateData()"
               )
             q-btn(
               flat
               label="Отмена"
               color="primary"
-              v-on:click="closeAc()"
+              v-on:click="popup.edit_popup = false"
               )
 </template>
 <script>
 import { mapState } from 'vuex'
+import { date } from 'quasar'
 export default {
   data () {
     return {
       user: {
-        id: '-',
-        name: '-',
-        lastname: '-',
-        phone: '-',
-        telegram: '-',
-        active: '-',
-        success: '-',
-        money: '-',
-        active_month: '-',
-        success_month: '-',
-        money_month: '-',
-        token: '-'         
+        pk: '',
+        first_name: '',
+        last_name: '',
+        phone: '',
+        telegram: ''
       },
-      popup:{
-        edit_ac: false,
+      popup: {
+        edit_popup: false
       }
     }
   },
@@ -92,39 +79,29 @@ export default {
   },
   beforeMount () {
     const vm = this
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
-     vm.Axios.post('/api/operator/authorize/').then(response => {
-        vm.user = response.data;
-     });
+    vm.Axios.get('/api/operator/authorize/').then(response => {
+      vm.user = response.data
+    })
   },
   methods: {
-    closeAc(){
-        const vm = this
-       vm.Axios.post('/api/operator/authorize/').then(response => {
-        vm.user = response.data;
-        vm.popup.edit_ac = false;
-     });
-    },
     showNotify (position, message, color) {
       this.$q.notify({
-        color: color, 
-        textColor: 'white', 
-        message: message, 
+        color: color,
+        textColor: 'white',
+        message: message,
         position: position,
         timeout: 3000
       })
     },
-    updateAc(id){
+    updateData () {
       const vm = this
-      vm.Axios.post('/api/operator/update_ac/', vm.user).then(response => {
-        console.log(response.data)
-        vm.Axios.post('/api/operator/authorize/').then(response => {
-          vm.user = response.data;
-           vm.popup.edit_ac = false;
-           vm.showNotify('top-right', 'Данные обновлены', 'positive')
-        });
-      });
+      vm.Axios.patch(`/api/operator/${vm.user.pk}/`, vm.user).then(response => {
+        vm.Axios.get('/api/operator/authorize/').then(response => {
+          vm.user = response.data
+          vm.popup.edit_popup = false
+          vm.showNotify('top-right', 'Данные обновлены', 'positive')
+        })
+      })
     }
   }
 }

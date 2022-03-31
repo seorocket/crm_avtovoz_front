@@ -75,11 +75,11 @@
 <script>
 import { mapState } from 'vuex'
 import { date } from 'quasar'
-  export default {
-    data(){
-      return {
-       options: [],
-       page_settings: {
+export default {
+  data () {
+    return {
+      options: [],
+      page_settings: {
         next: null,
         previous: null,
         num_pages: 0,
@@ -91,14 +91,14 @@ import { date } from 'quasar'
         last: 0,
         counts: {}
       },
-       document: {
-          number_doc: '',
-          comment: '',
-          file: '',
-          operator: '',
-       },
-       results: [],
-       columns: [
+      document: {
+        number_doc: '',
+        comment: '',
+        file: '',
+        operator: ''
+      },
+      results: [],
+      columns: [
         {
           name: 'id',
           align: 'left',
@@ -128,21 +128,21 @@ import { date } from 'quasar'
           label: 'Документ',
           align: 'left',
           field: 'file',
-          format: val => `Скачать`,
+          format: val => 'Скачать',
           sortable: false
-        },
-       ],
-       loading: false,
-       pagination: {
+        }
+      ],
+      loading: false,
+      pagination: {
         sortBy: 'desc',
         descending: false,
         page: 1,
         rowsPerPage: 30,
         max: 5
       }
-      }
-    },
-    computed: {
+    }
+  },
+  computed: {
     ...mapState([
       'token'
     ])
@@ -156,12 +156,10 @@ import { date } from 'quasar'
   beforeMount () {
     const vm = this
     this.loading = true
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.update_data()
   },
-    methods: {
-      update_data (nextpage = '/api/document/', update = false) {
+  methods: {
+    update_data (nextpage = '/api/document/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
@@ -175,21 +173,21 @@ import { date } from 'quasar'
       }).catch((error) => {
         console.log(error.response)
         if (error.response.status > 400 && error.response.status < 405) {
-          this.$store.dispatch('authorize', '')
+          console.log(error.response)
         }
       })
     },
-     openTab (evt, row, index) {
-      window.open(row.file);
+    openTab (evt, row, index) {
+      window.open(row.file)
     },
     onScroll ({ to, ref }) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
-      console.log(lastPage);
+      console.log(lastPage)
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
       const lastIndex = vm.results.length - 1
       if (vm.loading !== true && nextPage < lastPage && to === lastIndex) {
-        console.log(123);
+        console.log(123)
         this.loading = true
         this.$nextTick(() => {
           setTimeout(function () {
@@ -199,13 +197,13 @@ import { date } from 'quasar'
         })
       }
     },
-      filterFn (val, update, abort, url) {
-        const vm = this
-        setTimeout(() => {
-          if (val.length < 2) {
-            abort()
-            return
-          }
+    filterFn (val, update, abort, url) {
+      const vm = this
+      setTimeout(() => {
+        if (val.length < 2) {
+          abort()
+          return
+        }
         update(() => {
           if (val === '') {
             this.options = []
@@ -214,42 +212,42 @@ import { date } from 'quasar'
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
               vm.options = response.data.results.map(v => ({ label: v.username, value: v.pk }))
             }).catch((error) => {
-              this.$store.dispatch('authorize', '')
+              console.log(error.response)
             })
           }
         })
       }, 250)
     },
-      submitFile(){
-            const vm = this
-        if (!vm.submitting) {
-            vm.submitting = true
-            let formData = new FormData();
-            formData.append('file', vm.document.file);
-            formData.append('number_doc', vm.document.number_doc);
-            formData.append('comment', vm.document.comment);
-            formData.append('operator', vm.document.operator.value);
-            vm.Axios.post( '/api/document/',
-                formData,
-                {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-            ).then(function(){
-             vm.submitting = false
-             vm.update_data()
-        })
-        .catch(function(){
+    submitFile () {
+      const vm = this
+      if (!vm.submitting) {
+        vm.submitting = true
+        const formData = new FormData()
+        formData.append('file', vm.document.file)
+        formData.append('number_doc', vm.document.number_doc)
+        formData.append('comment', vm.document.comment)
+        formData.append('operator', vm.document.operator.value)
+        vm.Axios.post('/api/document/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(function () {
           vm.submitting = false
-        });
-       }
-      },
-      handleFileUpload(){
-        this.document.file = this.$refs.file.value[0];
+          vm.update_data()
+        })
+          .catch(function () {
+            vm.submitting = false
+          })
       }
+    },
+    handleFileUpload () {
+      this.document.file = this.$refs.file.value[0]
     }
   }
+}
 </script>
 
 <style>

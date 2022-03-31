@@ -87,11 +87,11 @@
 <script>
 import { mapState } from 'vuex'
 import { date } from 'quasar'
-  export default {
-    data(){
-      return {
-       options: [],
-       page_settings: {
+export default {
+  data () {
+    return {
+      options: [],
+      page_settings: {
         next: null,
         previous: null,
         num_pages: 0,
@@ -103,15 +103,15 @@ import { date } from 'quasar'
         last: 0,
         counts: {}
       },
-       parking_form: false,
-       results: [],
-       parking: {
-         city:'',
-         address: '',
-         contact: '',
-         comment: ''
-       },
-       columns: [
+      parking_form: false,
+      results: [],
+      parking: {
+        city: '',
+        address: '',
+        contact: '',
+        comment: ''
+      },
+      columns: [
         {
           name: 'id',
           align: 'left',
@@ -149,20 +149,20 @@ import { date } from 'quasar'
           label: 'Комментарий',
           align: 'left',
           field: 'comment',
-          sortable: true 
-        },
-       ],
-       loading: false,
-       pagination: {
+          sortable: true
+        }
+      ],
+      loading: false,
+      pagination: {
         sortBy: 'desc',
         descending: false,
         page: 1,
         rowsPerPage: 30,
         max: 5
       }
-      }
-    },
-    computed: {
+    }
+  },
+  computed: {
     ...mapState([
       'token'
     ])
@@ -176,12 +176,10 @@ import { date } from 'quasar'
   beforeMount () {
     const vm = this
     this.loading = true
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.update_data()
   },
-    methods: {
-      update_data (nextpage = '/api/parking/', update = false) {
+  methods: {
+    update_data (nextpage = '/api/parking/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
@@ -195,29 +193,29 @@ import { date } from 'quasar'
       }).catch((error) => {
         console.log(error.response)
         if (error.response.status > 400 && error.response.status < 405) {
-          this.$store.dispatch('authorize', '')
+          console.log(error.response)
         }
       })
     },
-    createParking(){
+    createParking () {
       const vm = this
-       vm.Axios.post('/api/parking/', vm.parking).then(response => {
-         console.log(response);
-         vm.parking_form = false;
-         vm.update_data()
-       })
+      vm.Axios.post('/api/parking/', vm.parking).then(response => {
+        console.log(response)
+        vm.parking_form = false
+        vm.update_data()
+      })
     },
-     openTab (evt, row, index) {
+    openTab (evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)
     },
     onScroll ({ to, ref }) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
-      console.log(lastPage);
+      console.log(lastPage)
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
       const lastIndex = vm.results.length - 1
       if (vm.loading !== true && nextPage < lastPage && to === lastIndex) {
-        console.log(123);
+        console.log(123)
         this.loading = true
         this.$nextTick(() => {
           setTimeout(function () {
@@ -227,13 +225,13 @@ import { date } from 'quasar'
         })
       }
     },
-      filterFn (val, update, abort, url) {
-        const vm = this
-        setTimeout(() => {
-          if (val.length < 2) {
-            abort()
-            return
-          }
+    filterFn (val, update, abort, url) {
+      const vm = this
+      setTimeout(() => {
+        if (val.length < 2) {
+          abort()
+          return
+        }
         update(() => {
           if (val === '') {
             this.options = []
@@ -242,14 +240,14 @@ import { date } from 'quasar'
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
               vm.options = response.data.results.map(v => ({ label: v.username, value: v.pk }))
             }).catch((error) => {
-              this.$store.dispatch('authorize', '')
+              console.log(error.response)
             })
           }
         })
       }, 250)
-    },
     }
   }
+}
 </script>
 
 <style>

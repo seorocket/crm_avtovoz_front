@@ -1,7 +1,9 @@
 <template lang="pug">
   div(class="q-pa-md")
-    q-btn.q-mb-md(color="primary" label="Добавить стоимость" @click="price_form = true")
-    q-btn.q-mb-md(color="primary" label="Добавить город" @click="city_form = true")
+    div.col-md-2.q-pa-sm
+      q-btn.q-mb-md(color="primary" label="Добавить стоимость" @click="price_form = true")
+    div.col-md-2.q-pa-sm
+      q-btn.q-mb-md(color="primary" label="Добавить город" @click="city_form = true")
     template
       div(class="q-pa-md")
         q-table(
@@ -63,7 +65,7 @@
           span(class="q-ml-sm text-h6") Редактировать стоимость
         q-card-section(class="row items-center")
             q-input(
-              v-model="price.sendan"
+              v-model="price.sedan"
               outlined
               style="width: 100%; margin-bottom: 10px"
               label="Цена седан"
@@ -74,7 +76,7 @@
               v-model="price.jeep"
               outlined
               style="width: 100%; margin-bottom: 10px"
-              label="Джип"
+              label="Цена джип"
               stack-label
               autogrow
             )
@@ -82,7 +84,7 @@
               v-model="price.crossover"
               outlined
               style="width: 100%; margin-bottom: 10px"
-              label="Кроссовер"
+              label="Цена кроссовер"
               stack-label
               autogrow
             )
@@ -97,8 +99,7 @@
               label="Отмена"
               color="primary"
               v-on:click="edit_price_form = false"
-            )    
-
+            )
 
     q-dialog(
       v-model="price_form"
@@ -118,7 +119,6 @@
               label="Откуда"
               :options="options_city"
               @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              @filter-abort="abortFilterFn"
               style="width: 100%; margin-bottom: 10px"
             )
             q-select(
@@ -131,11 +131,10 @@
               label="Куда"
               :options="options_city"
               @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              @filter-abort="abortFilterFn"
               style="width: 100%; margin-bottom: 10px; padding-bottom: 0;"
             )
             q-input(
-              v-model="price.sendan"
+              v-model="price.sedan"
               outlined
               style="width: 100%; margin-bottom: 10px"
               label="Цена седан"
@@ -174,14 +173,14 @@
 <script>
 import { mapState } from 'vuex'
 import { date } from 'quasar'
-  export default {
-    data(){
-      return {
-       price_form: false,
-       edit_price_form: false,
-       city_form: false,
-       options: [],
-       page_settings: {
+export default {
+  data () {
+    return {
+      price_form: false,
+      edit_price_form: false,
+      city_form: false,
+      options: [],
+      page_settings: {
         next: null,
         previous: null,
         num_pages: 0,
@@ -191,25 +190,25 @@ import { date } from 'quasar'
         count: 0,
         first: 0,
         last: 0,
-        counts: {}       
+        counts: {}
       },
-      options_city:[],
-       price: {
-         pk: '',
-         crossover: '',
-         direction_from: '',
-         direction_to: '',
-         jeep: '',
-         sendan: ''
-       },
-       results: [],
-       citys: '',
-       columns: [
+      options_city: [],
+      price: {
+        pk: '',
+        crossover: '',
+        direction_from: '',
+        direction_to: '',
+        jeep: '',
+        sedan: ''
+      },
+      results: [],
+      citys: '',
+      columns: [
         {
-          name: 'id',
+          name: 'pk',
           align: 'left',
           label: 'ID',
-          field: 'id',
+          field: 'pk',
           sortable: true
         },
         {
@@ -221,11 +220,11 @@ import { date } from 'quasar'
           sortable: true
         },
         {
-          name: 'sendan',
+          name: 'sedan',
           required: true,
           label: 'Седан',
           align: 'left',
-          field: 'sendan',
+          field: 'sedan',
           sortable: true
         },
         {
@@ -234,7 +233,7 @@ import { date } from 'quasar'
           label: 'Кроссовер',
           align: 'left',
           field: 'crossover',
-          sortable: true 
+          sortable: true
         },
         {
           name: 'jeep',
@@ -245,23 +244,23 @@ import { date } from 'quasar'
           sortable: true
         },
         {
-          name: "action",
-          align: "right",
-          label: "Action",
-          field: "action"
+          name: 'action',
+          align: 'right',
+          label: 'Action',
+          field: 'action'
         }
-       ],
-       loading: false,
-       pagination: {
+      ],
+      loading: false,
+      pagination: {
         sortBy: 'desc',
         descending: false,
         page: 1,
         rowsPerPage: 30,
         max: 5
       }
-      }
-    },
-    computed: {
+    }
+  },
+  computed: {
     ...mapState([
       'token'
     ])
@@ -275,22 +274,20 @@ import { date } from 'quasar'
   beforeMount () {
     const vm = this
     this.loading = true
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.update_data()
-    vm.get_city_opt();
+    vm.get_city_opt()
   },
-    methods: {
-      get_city_opt(){
-        const vm = this
-        vm.Axios.get('/api/cities/').then(response => {
+  methods: {
+    get_city_opt () {
+      const vm = this
+      vm.Axios.get('/api/cities/').then(response => {
         const data = response.data.results
-         for (const item in data) {
-          vm.options_city.push({'label': data[item].name, 'value': data[item].pk})
-         }
-        });
-      },
-      update_data (nextpage = '/api/city-price/', update = false) {
+        for (const item in data) {
+          vm.options_city.push({ label: data[item].name, value: data[item].pk })
+        }
+      })
+    },
+    update_data (nextpage = '/api/city-price/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
@@ -301,33 +298,27 @@ import { date } from 'quasar'
           vm.results = vm.page_settings.results
         }
         vm.loading = false
-      }).catch((error) => {
-        console.log(error.response)
-        if (error.response.status > 400 && error.response.status < 405) {
-          this.$store.dispatch('authorize', '')
-        }
       })
     },
-    editPrice(row){
-     const vm = this
-     vm.price.pk = row.pk
-     vm.price.sendan = row.sendan
-     vm.price.jeep = row.jeep
-     vm.price.crossover = row.crossover
-     vm.edit_price_form = true;
-    },
-    updatePrice(){
+    editPrice (row) {
       const vm = this
-       vm.Axios.post('/api/city-price/update_price/', vm.price).then(response => {
-         console.log(response);
-         vm.edit_price_form = false;
-         vm.id = ''
-         vm.price.sendan = ''
-         vm.price.jeep = ''
-         vm.price.crossover = ''
-         vm.update_data()
-         vm.showNotify('top-right', 'Данные обновлены', 'positive')
-       })
+      vm.price.pk = row.pk
+      vm.price.sedan = row.sedan
+      vm.price.jeep = row.jeep
+      vm.price.crossover = row.crossover
+      vm.edit_price_form = true
+    },
+    updatePrice () {
+      const vm = this
+      vm.Axios.patch(`/api/city-price/${vm.price.pk}/`, vm.price).then(response => {
+        vm.edit_price_form = false
+        vm.pk = ''
+        vm.price.sndan = ''
+        vm.price.jeep = ''
+        vm.price.crossover = ''
+        vm.update_data()
+        vm.showNotify('top-right', 'Данные обновлены', 'positive')
+      })
     },
     showNotify (position, message, color) {
       this.$q.notify({
@@ -338,32 +329,34 @@ import { date } from 'quasar'
         timeout: 3000
       })
     },
-    addCity(){
+    addCity () {
       const vm = this
-      vm.Axios.post('/api/city-price/add_city/', {'city': vm.citys}).then(response => {
-         console.log(response);
-         vm.city_form = false;
-         vm.citys = '';
-         vm.showNotify('top-right', 'Данные добавлены', 'positive')
-         get_city_opt();
-       })
+      vm.Axios.post('/api/cities/', { name: vm.citys }).then(response => {
+        vm.city_form = false
+        vm.citys = ''
+        vm.showNotify('top-right', 'Данные добавлены', 'positive')
+        vm.get_city_opt()
+      })
     },
-    createPrice(){
+    createPrice () {
       const vm = this
-       vm.Axios.post('/api/city-price/add_price/', vm.price).then(response => {
-         console.log(response);
-         vm.price_form = false;
-         vm.update_data()
-         vm.showNotify('top-right', 'Данные добавлены', 'positive')
-       })
+      for (let key in vm.price) {
+        if (typeof(vm.price[key]) == 'object') {
+          vm.price[key] = vm.price[key].value
+        }
+      }
+      vm.Axios.post('/api/city-price/', vm.price).then(response => {
+        vm.price_form = false
+        vm.update_data()
+        vm.showNotify('top-right', 'Данные добавлены', 'positive')
+      })
     },
-     openTab (evt, row, index) {
+    openTab (evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)
     },
     onScroll ({ to, ref }) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
-      console.log(lastPage);
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
       const lastIndex = vm.results.length - 1
       if (vm.loading !== true && nextPage < lastPage && to === lastIndex) {
@@ -376,13 +369,13 @@ import { date } from 'quasar'
         })
       }
     },
-      filterFn (val, update, abort, url) {
-        const vm = this
-        setTimeout(() => {
-          if (val.length < 2) {
-            abort()
-            return
-          }
+    filterFn (val, update, abort, url) {
+      const vm = this
+      setTimeout(() => {
+        if (val.length < 2) {
+          abort()
+          return
+        }
         update(() => {
           if (val === '') {
             this.options = []
@@ -394,9 +387,9 @@ import { date } from 'quasar'
           }
         })
       }, 250)
-    },
     }
   }
+}
 </script>
 
 <style>

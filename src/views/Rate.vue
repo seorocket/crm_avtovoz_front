@@ -61,7 +61,6 @@
               v-on:click="edit_rate_form = false"
             )
 
-
     q-dialog(
       v-model="rate_form"
       persistent
@@ -110,14 +109,14 @@
 <script>
 import { mapState } from 'vuex'
 import { date } from 'quasar'
-  export default {
-    data(){
-      return {
-       rate_form: false,
-       edit_rate_form: false,
-       city_form: false,
-       options: [],
-       page_settings: {
+export default {
+  data () {
+    return {
+      rate_form: false,
+      edit_rate_form: false,
+      city_form: false,
+      options: [],
+      page_settings: {
         next: null,
         previous: null,
         num_pages: 0,
@@ -127,18 +126,18 @@ import { date } from 'quasar'
         count: 0,
         first: 0,
         last: 0,
-        counts: {}       
+        counts: {}
       },
-      options_city:[],
-       rate: {
-         pk: '',
-         city: '',
-         direction: '',
-         rate: '',
-       },
-       results: [],
-       citys: '',
-       columns: [
+      options_city: [],
+      rate: {
+        pk: '',
+        city: '',
+        direction: '',
+        rate: ''
+      },
+      results: [],
+      citys: '',
+      columns: [
         {
           name: 'id',
           align: 'left',
@@ -168,26 +167,26 @@ import { date } from 'quasar'
           label: 'Рейтинг',
           align: 'left',
           field: 'rate',
-          sortable: true 
+          sortable: true
         },
         {
-          name: "action",
-          align: "right",
-          label: "Action",
-          field: "action"
+          name: 'action',
+          align: 'right',
+          label: 'Action',
+          field: 'action'
         }
-       ],
-       loading: false,
-       pagination: {
+      ],
+      loading: false,
+      pagination: {
         sortBy: 'desc',
         descending: false,
         page: 1,
         rowsPerPage: 30,
         max: 5
       }
-      }
-    },
-    computed: {
+    }
+  },
+  computed: {
     ...mapState([
       'token'
     ])
@@ -201,22 +200,20 @@ import { date } from 'quasar'
   beforeMount () {
     const vm = this
     this.loading = true
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.update_data()
-    vm.get_city_opt();
+    vm.get_city_opt()
   },
-    methods: {
-      get_city_opt(){
-        const vm = this
-        vm.Axios.get('/api/cities/').then(response => {
+  methods: {
+    get_city_opt () {
+      const vm = this
+      vm.Axios.get('/api/cities/').then(response => {
         const data = response.data.results
-         for (const item in data) {
-          vm.options_city.push({'label': data[item].name, 'value': data[item].pk})
-         }
-        });
-      },
-      update_data (nextpage = '/api/rate/', update = false) {
+        for (const item in data) {
+          vm.options_city.push({ label: data[item].name, value: data[item].pk })
+        }
+      })
+    },
+    update_data (nextpage = '/api/rate/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.results = response.data
@@ -225,25 +222,25 @@ import { date } from 'quasar'
         console.log(error.response)
       })
     },
-    editRate(row){
-     const vm = this
-     vm.rate.pk = row.pk
-     vm.rate.city = row.city
-     vm.rate.direction = row.direction
-     vm.rate.rate = row.rate
-     vm.edit_rate_form = true;
-    },
-    updateRate(){
+    editRate (row) {
       const vm = this
-       vm.Axios.post('/api/rate/update_rate/', vm.rate).then(response => {
-         vm.edit_rate_form = false;
-         vm.rate.pk = ''
-         vm.rate.city = ''
-         vm.rate.direction = ''
-         vm.rate.rate = ''
-         vm.update_data()
-         vm.showNotify('top-right', 'Данные обновлены', 'positive')
-       })
+      vm.rate.pk = row.pk
+      vm.rate.city = row.city
+      vm.rate.direction = row.direction
+      vm.rate.rate = row.rate
+      vm.edit_rate_form = true
+    },
+    updateRate () {
+      const vm = this
+      vm.Axios.post('/api/rate/update_rate/', vm.rate).then(response => {
+        vm.edit_rate_form = false
+        vm.rate.pk = ''
+        vm.rate.city = ''
+        vm.rate.direction = ''
+        vm.rate.rate = ''
+        vm.update_data()
+        vm.showNotify('top-right', 'Данные обновлены', 'positive')
+      })
     },
     showNotify (position, message, color) {
       this.$q.notify({
@@ -254,32 +251,32 @@ import { date } from 'quasar'
         timeout: 3000
       })
     },
-    addCity(){
+    addCity () {
       const vm = this
-      vm.Axios.post('/api/city-price/add_city/', {'city': vm.citys}).then(response => {
-         console.log(response);
-         vm.city_form = false;
-         vm.citys = '';
-         vm.showNotify('top-right', 'Данные добавлены', 'positive')
-         get_city_opt();
-       })
+      vm.Axios.post('/api/city-price/add_city/', { city: vm.citys }).then(response => {
+        console.log(response)
+        vm.city_form = false
+        vm.citys = ''
+        vm.showNotify('top-right', 'Данные добавлены', 'positive')
+        get_city_opt()
+      })
     },
-    createRate(){
+    createRate () {
       const vm = this
-       vm.Axios.post('/api/rate/add_rate/', vm.rate).then(response => {
-         console.log(response);
-         vm.rate_form = false;
-         vm.update_data()
-         vm.showNotify('top-right', 'Данные добавлены', 'positive')
-       })
+      vm.Axios.post('/api/rate/add_rate/', vm.rate).then(response => {
+        console.log(response)
+        vm.rate_form = false
+        vm.update_data()
+        vm.showNotify('top-right', 'Данные добавлены', 'positive')
+      })
     },
-     openTab (evt, row, index) {
+    openTab (evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)
     },
     onScroll ({ to, ref }) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
-      console.log(lastPage);
+      console.log(lastPage)
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
       const lastIndex = vm.results.length - 1
       if (vm.loading !== true && nextPage < lastPage && to === lastIndex) {
@@ -292,13 +289,13 @@ import { date } from 'quasar'
         })
       }
     },
-      filterFn (val, update, abort, url) {
-        const vm = this
-        setTimeout(() => {
-          if (val.length < 2) {
-            abort()
-            return
-          }
+    filterFn (val, update, abort, url) {
+      const vm = this
+      setTimeout(() => {
+        if (val.length < 2) {
+          abort()
+          return
+        }
         update(() => {
           if (val === '') {
             this.options = []
@@ -310,9 +307,9 @@ import { date } from 'quasar'
           }
         })
       }, 250)
-    },
     }
   }
+}
 </script>
 
 <style>

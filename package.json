@@ -12,13 +12,14 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "mango-vpbx": "^1.6.4",
+    "notifyjs": "^3.0.0",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.0.0",
     "quasar": "^1.0.0",
     "vue": "^2.6.12",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
-    "vuex-persistedstate": "^4.0.0-beta.1"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

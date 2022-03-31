@@ -117,7 +117,6 @@
 
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
-        
 
 </template>
 
@@ -209,6 +208,12 @@ export default {
       }],
       columns: [
         {
+          name: 'action',
+          align: 'right',
+          label: 'Action',
+          field: 'action'
+        },
+        {
           name: 'id',
           align: 'left',
           label: 'ID',
@@ -254,7 +259,7 @@ export default {
           align: 'left',
           field: row => row.client.phone,
           format: val => val,
-          sortable: false,
+          sortable: false
         },
         {
           name: 'site_name',
@@ -272,20 +277,14 @@ export default {
           field: row => row.datetime,
           format: val => date.formatDate(val, 'DD.MM.YYYY HH:mm'),
           sortable: true
-        },
-        {
-          name: "action",
-          align: "right",
-          label: "Action",
-          field: "action"
         }
       ],
       rate_count: [
-       {
-         name: '',
-         type: 0,
-         rate: 0
-       }
+        {
+          name: '',
+          type: 0,
+          rate: 0
+        }
       ],
       pagination: {
         sortBy: 'desc',
@@ -298,7 +297,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'token'
+      'token',
+      'operator'
     ])
   },
   watch: {
@@ -310,8 +310,6 @@ export default {
   beforeMount () {
     const vm = this
     this.loading = true
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.update_data()
   },
   mounted () {
@@ -320,14 +318,13 @@ export default {
     filter_orders (status) {
       const vm = this
       vm.current_status = status
-      vm.update_data('/api/orders/?status=' + vm.current_status, false)
+      vm.update_data(`/api/orders/?status=${vm.current_status}&operator=${1}`, false)
     },
     inWorck(row){
-       const vm = this
-       vm.Axios.post('/api/orders/set_in_work/', {'id': row.id}).then(response => {
-         console.log(response.data);
-       });
-       vm.openTab(row);
+      const vm = this
+      vm.Axios.post(`/api/orders/${row.id}/set_in_work/`).then(response => {
+      })
+      vm.openTab(row)
     },
     filter_orders_rate (rate) {
       const vm = this
@@ -340,14 +337,14 @@ export default {
       let params = []
       for (const key in vm.order_filters) {
         if (vm.order_filters[key]) {
-          if (key == 'id'){
-              params.push('search=' + vm.order_filters[key])
-          } else{
-              params.push(key + '=' + vm.order_filters[key])
+          if (key == 'id') {
+            params.push('search=' + vm.order_filters[key])
+          } else {
+            params.push(key + '=' + vm.order_filters[key])
           }
         }
       }
-      if (params.length) {        
+      if (params.length) {
         params = params.join('&')
         params = '?' + params
       } else {
@@ -355,30 +352,30 @@ export default {
       }
       vm.update_data('/api/orders/' + params, false)
     },
-    update_data (nextpage = '/api/orders/?status=' + this.current_status, update = false) {
+    update_data (nextpage = `/api/orders/?status=${this.current_status}&operator=${this.operator}`, update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
         vm.pagination.rowsNumber = response.data.count
-        
+
         if (update) {
           vm.results = vm.results.concat(vm.page_settings.results)
         } else {
           vm.results = vm.page_settings.results
         }
         vm.results.forEach((value, key, map) => {
-            if(value.status.value < 2){
-             value.client.phone='';
-            }
-        });
+          if (value.status.value < 2) {
+            value.client.phone = ''
+          }
+        })
         vm.loading = false
       }).catch((error) => {
         if (error.response.status > 400 && error.response.status < 405) {
-          this.$store.dispatch('authorize', '')
+          console.log(error.response)
         }
       })
       vm.Axios.get('/api/orders/get_count_rate/').then(response => {
-         vm.rate_count = response.data
+        vm.rate_count = response.data
       })
     },
     onScroll ({ to, ref }) {

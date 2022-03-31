@@ -107,7 +107,7 @@ export default {
       },
       columns: [
         { name: 'name', align: 'left', label: 'Имя', field: 'name', sortable: true },
-        { name: 'phone', align: 'center', label: 'Телефон', field:'phone', sortable: true},
+        { name: 'phone', align: 'center', label: 'Телефон', field: 'phone', sortable: true },
         { name: 'info', align: 'center', label: 'Инфо', field: 'info' },
         { name: 'comment', label: 'Комментарий', field: 'comment' }
       ]
@@ -130,8 +130,6 @@ export default {
   },
   beforeMount () {
     const vm = this
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.updateDrivers()
   },
   methods: {
@@ -153,7 +151,7 @@ export default {
         vm.drivers_tmp = response.data.results
       }).catch((error) => {
         console.log(error.response.data)
-        this.$store.dispatch('authorize', '')
+        console.log(error.response)
       })
     },
     createDriver () {

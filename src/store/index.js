@@ -7,13 +7,14 @@ import router from '../router/index.js'
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.prototype.Axios = Axios
-
+Vue.prototype.Axios.defaults.baseURL = 'http://127.0.0.1:8000'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     miniStateDrawer: false,
     orderTabs: [],
+    operator: undefined,
     token: undefined
   },
   mutations: {
@@ -28,8 +29,9 @@ export default new Vuex.Store({
       state.orderTabs = arr
       router.push({ path: '/order/' + data })
     },
-    authorize (state, data) {
-      state.token = data
+    authorize_user (state, data) {
+      state.token = data.token
+      state.operator = data.operator
     },
     closeTab (state, data) {
       state.orderTabs = state.orderTabs.filter(item => item !== data)
@@ -45,12 +47,12 @@ export default new Vuex.Store({
     closeTab ({ commit }, int) {
       commit('closeTab', int)
     },
-    authorize ({ commit }, str) {
-      commit('authorize', str)
+    authorize_user ({ commit }, str) {
+      commit('authorize_user', str)
     }
   },
   modules: {
 
   },
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState({storage: window.localStorage,})]
 })

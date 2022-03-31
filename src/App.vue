@@ -23,11 +23,11 @@
                   q-item-section Стоянки
 
                 q-item(clickable v-ripple to="/rate")
-                  q-item-section Рейтинг направлений                
+                  q-item-section Рейтинг направлений
 
                 q-item(clickable v-ripple to="/city-price")
                   q-item-section Стоимость доставки
-    
+
                 q-item(clickable v-ripple to="/account")
                   q-item-section Мой аккаунт
 
@@ -69,7 +69,7 @@
             q-item-section(avatar)
               q-icon(name="style")
             q-item-section Документ
-          
+
           q-item(clickable v-ripple to="/addorder")
             q-item-section(avatar)
               q-icon(name="add_task")
@@ -94,7 +94,6 @@
             q-item-section(avatar)
               q-icon(name="person")
             q-item-section Мой аккаунт
-                
 
           <!--q-item(clickable v-ripple to="/stat")-->
             <!--q-item-section(avatar)-->
@@ -171,6 +170,7 @@ export default {
     } else {
       this.dialog = true
     }
+    this.Axios.defaults.headers.common.Authorization = 'JWT ' + this.token
   },
   methods: {
     drawerClick (e) {
@@ -186,24 +186,27 @@ export default {
     },
     showNotify (position, message, color) {
       this.$q.notify({
-        color: color, 
-        textColor: 'white', 
-        message: message, 
+        color: color,
+        textColor: 'white',
+        message: message,
         position: position,
         timeout: 3000
       })
     },
     logOut () {
       const vm = this
-      vm.$store.dispatch('authorize', '')
+      vm.$store.dispatch('authorize_user', {operator: null, token: undefined})
       vm.dialog = true
     },
     authorization () {
       const vm = this
       vm.Axios.post('/api/api-token-auth/', vm.login).then(response => {
-        vm.Axios.defaults.headers.common.Authorization = 'JWT ' + response.data.token
+        let token = response.data.token
+        vm.Axios.defaults.headers.common.Authorization = 'JWT ' + token
         vm.dialog = false
-        this.$store.dispatch('authorize', response.data.token)
+        vm.Axios.get('/api/operator/authorize/').then(response => {
+          this.$store.dispatch('authorize_user', {token: token, operator: response.data.pk})
+        })
       })
     }
   }

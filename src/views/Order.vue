@@ -83,6 +83,35 @@
             :hint=`data.driver_price && data.order_price? '' : 'Заполните все цены'`
             style="max-width: 250px")
 
+      div.text-h6.q-pb-xs.q-pt-md Оплата
+      div.row.q-col-gutter-none
+        div.col-md-3
+          q-input(
+            v-model.number="data.pre_paid"
+            type="number"
+            label="Первая часть"
+            filled
+            style="max-width: 250px")
+
+        div.col-md-3
+          q-input(
+            v-model.number="data.past_paid"
+            type="number"
+            label="Вторая часть"
+            filled
+            style="max-width: 250px")
+
+        div.col-md-3
+          q-input(
+            v-model="data.debt"
+            type="number"
+            label="Долг клиента"
+            filled
+            standout
+            readonly
+            :hint=`data.driver_price ? '' : 'Заполните цену перевозки'`
+            style="max-width: 250px")
+
       div.text-h6.q-pb-xs.q-pt-md Инфо о клиенте
       div.row.q-col-gutter-none
         div.col-md-3
@@ -221,8 +250,10 @@ export default {
     'data.order_price' (event) {
       if (this.data.driver_price && this.data.order_price) {
         this.data.delta = this.data.order_price - this.data.driver_price
+        this.data.debt = this.data.order_price - (this.pre_paid + this.past_paid)
       } else {
         this.data.delta = 0
+        this.data.debt = 0
       }
     },
     'data.driver_price' (event) {
@@ -230,6 +261,16 @@ export default {
         this.data.delta = this.data.order_price - this.data.driver_price
       } else {
         this.data.delta = 0
+      }
+    },
+    'data.pre_paid' (event) {
+      if (this.data.order_price) {
+        this.data.debt = this.data.order_price - (this.data.pre_paid + this.data.past_paid)
+      }
+    },
+    'data.past_paid' (event) {
+      if (this.data.order_price) {
+        this.data.debt = this.data.order_price - (this.data.pre_paid + this.data.past_paid)
       }
     }
   },
@@ -240,21 +281,19 @@ export default {
   },
   beforeMount () {
     const vm = this
-    vm.Axios.defaults.headers.common.Authorization = 'JWT ' + vm.token
-    vm.Axios.defaults.baseURL = 'https://autoirr.ru'
     vm.Axios.get('/api/orders/' + vm.current_page_id + '/').then(response => {
       vm.data = response.data
       vm.tmp = JSON.stringify(response.data)
       vm.old_tmp = JSON.stringify(response.data)
     }).catch((error) => {
-      window.location.href = '/';
+      // window.location.href = '/'
     })
     vm.Axios.get('/api/drivers/').then(response => {
-        const data = response.data.results
-         for (const item in data) {
-          vm.options_driver.push({'label': data[item].name, 'value': data[item].pk})
-         }
-        });
+      const data = response.data.results
+      for (const item in data) {
+        vm.options_driver.push({ label: data[item].name, value: data[item].pk })
+      }
+    })
     router.beforeEach((to, from, next) => {
       if (to.name === 'Order') {
         vm.Axios.get('/api/orders/' + to.params.id + '/').then(response => {
@@ -278,7 +317,7 @@ export default {
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
               vm.options = response.data.results.map(v => ({ label: v.name, value: v.pk }))
             }).catch((error) => {
-              window.location.href = '/';
+              window.location.href = '/'
             })
           }
         })
@@ -298,6 +337,8 @@ export default {
             number: 'str',
             order_price: 'int',
             driver_price: 'int',
+            pre_paid: 'int',
+            past_paid: 'int',
             datetime: 'datetime',
             status: 'fk',
             direction_from: 'fk',
@@ -334,7 +375,7 @@ export default {
             vm.old_tmp = JSON.stringify(response.data)
             vm.submitting = false
           }).catch((error) => {
-            window.location.href = '/';
+            window.location.href = '/'
           })
         }, 500)
       }
