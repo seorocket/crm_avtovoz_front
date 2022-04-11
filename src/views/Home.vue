@@ -318,7 +318,7 @@ export default {
     filter_orders (status) {
       const vm = this
       vm.current_status = status
-      vm.update_data(`/api/orders/?status=${vm.current_status}&operator=${1}`, false)
+      vm.update_data(`/api/orders/?status=${vm.current_status}&operator=${vm.operator}`, false)
     },
     showNotify (position, message, color) {
       this.$q.notify({
