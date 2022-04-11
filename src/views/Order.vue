@@ -371,6 +371,7 @@ export default {
             }
           }
           vm.Axios.patch('/api/orders-edit/' + vm.current_page_id + '/', tmpData).then(response => {
+            vm.data = response.data
             vm.tmp = JSON.stringify(response.data)
             vm.old_tmp = JSON.stringify(response.data)
             vm.submitting = false

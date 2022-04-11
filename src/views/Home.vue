@@ -1,15 +1,17 @@
 <template lang="pug">
   div(class="q-pa-md")
     div(class="q-pa-md q-gutter-sm")
-      div
-        template(v-for="b in rate_count")
-          q-btn(
-            color="white"
-            text-color="black"
-            :key="b.name"
-            :label="`${b.name}: (${b.rate})`"
-            v-on:click="filter_orders_rate(b.type)"
-          )
+      h5 Рейтинг
+      template(v-for="b in rate_count")
+        q-btn(
+          color="white"
+          text-color="black"
+          :key="b.name"
+          :label="`${b.name}: (${b.rate})`"
+          v-on:click="filter_orders_rate(b.type)"
+        )
+      br
+      h5 Статусы
       template(v-for="b in statuses")
         q-btn(
           color="white"
@@ -19,7 +21,7 @@
           v-on:click="filter_orders(b.id)"
         )
       template
-        div.text-h6.q-pb-xs.q-pt-md Фильтры
+        h5 Фильтры
         form(@submit.prevent="filterOrdersStr()" method="post" id="login" style="min-width: 400px")
           div.row.q-col-gutter-none
             div.col-md-2.q-pa-sm
@@ -416,5 +418,8 @@ export default {
 <style>
   .row.q-col-gutter-none .q-field__label {
     font-size: 14px;
+  }
+  h5 {
+    margin-bottom: 0;
   }
 </style>

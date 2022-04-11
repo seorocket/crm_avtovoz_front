@@ -73,7 +73,7 @@
           q-item(clickable v-ripple to="/addorder")
             q-item-section(avatar)
               q-icon(name="add_task")
-            q-item-section Добавить завяку
+            q-item-section Добавить заявку
 
           q-item(clickable v-ripple to="/parking")
             q-item-section(avatar)
