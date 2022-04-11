@@ -366,7 +366,7 @@ export default {
       }
       vm.update_data('/api/orders/' + params, false)
     },
-    update_data (nextpage = `/api/orders/?status=${this.current_status}&operator=${this.operator}`, update = false) {
+    update_data (nextpage = `/api/orders/?status=${this.current_status}`, update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
