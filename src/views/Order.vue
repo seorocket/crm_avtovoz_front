@@ -130,6 +130,16 @@
             fill-mask
             style="max-width: 250px")
 
+        div.col-md-3
+          q-input(
+            filled
+            v-model="data.ship_dt"
+            label="Желаемая дата доставки"
+            fill-mask
+            readonly
+            style="max-width: 250px")
+
+
       div.text-h6.q-pb-xs.q-pt-md Инфо о заказе
       div.row.q-col-gutter-none
         div.col-md-3
@@ -339,6 +349,7 @@ export default {
             driver_price: 'int',
             pre_paid: 'int',
             past_paid: 'int',
+            ship_dt: 'str',
             datetime: 'datetime',
             status: 'fk',
             direction_from: 'fk',
