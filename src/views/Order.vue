@@ -134,7 +134,7 @@
           q-input(
             filled
             v-model="data.ship_dt"
-            label="Желаемая дата доставки"
+            label="Желаемая дата загрузки"
             fill-mask
             style="max-width: 250px")
 
