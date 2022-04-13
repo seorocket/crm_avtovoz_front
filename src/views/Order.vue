@@ -136,7 +136,6 @@
             v-model="data.ship_dt"
             label="Желаемая дата доставки"
             fill-mask
-            readonly
             style="max-width: 250px")
 
 
