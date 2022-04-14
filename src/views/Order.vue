@@ -230,7 +230,7 @@ export default {
       data: {},
       save: false,
       submitting: false,
-      statuses: [{ value: 0, label: 'Отказ' }, { value: 1, label: 'Новая заявка' }, { value: 2, label: 'Расчёт цены' }, { value: 3, label: 'Подписание договора' }, { value: 4, label: 'Первые 50%' }, { value: 5, label: 'Завершена' }, { value: 6, label: 'Перезвонить' }, { value: 7, label: 'Архив' }, { value: 8, label: 'Звонок с сайта' }, { value: 9, label: 'Неверный номер' }, { value: 10, label: 'В работе' }]
+      statuses: [{ value: 11, label: 'Отказ' }, { value: 1, label: 'Новая заявка' }, { value: 2, label: 'Расчёт цены' }, { value: 3, label: 'Подписание договора' }, { value: 4, label: 'Первые 50%' }, { value: 5, label: 'Завершена' }, { value: 6, label: 'Перезвонить' }, { value: 7, label: 'Не возим' }, { value: 8, label: 'Звонок с сайта' }, { value: 9, label: 'Неверный номер' }, { value: 10, label: 'В работе' }]
     }
   },
   watch: {
@@ -386,7 +386,7 @@ export default {
             vm.old_tmp = JSON.stringify(response.data)
             vm.submitting = false
           }).catch((error) => {
-            window.location.href = '/'
+            console.log(error)
           })
         }, 500)
       }

@@ -194,7 +194,7 @@ export default {
         alias: 'recall'
       },
       {
-        name: 'Архив',
+        name: 'Не везем',
         id: 7,
         alias: 'archive'
       },
@@ -205,7 +205,7 @@ export default {
       },
       {
         name: 'Отказ',
-        id: 0,
+        id: 11,
         alias: 'decline'
       }],
       columns: [
