@@ -30,7 +30,7 @@
                 label="Откуда"
                 :options="options"
                 @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-                style="width: 250px"
+                style="width: 100%"
                 :clearable="true")
 
             div.col-md-2.q-pa-sm
@@ -44,7 +44,7 @@
                 label="Откуда"
                 :options="options"
                 @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-                style="width: 250px"
+                style="width: 100%"
                 :clearable="true")
             div.col-md-2.q-pa-sm
               q-input(
@@ -63,7 +63,7 @@
                 input-debounce="0"
                 label="Статус"
                 :options="options_stat"
-                style="width: 250px"
+                style="width: 100%"
                 :clearable="true")
 
                 template(v-slot:no-option)
@@ -80,7 +80,7 @@
                 label="Оператор"
                 :options="options"
                 @filter="(val, update, abort) => filterFn(val, update, abort, 'operator')"
-                style="width: 250px"
+                style="width: 100%"
                 :clearable="true")
 
                 template(v-slot:no-option)
