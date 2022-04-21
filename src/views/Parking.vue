@@ -18,13 +18,12 @@
           @virtual-scroll="onScroll"
           style="height: 410px;"
         )
-          template(#body-cell-contact="props")
+          template(#body-cell-action="props")
             q-td
-              div( v-html="props.row.contact")
-
-          template(#body-cell-comment="props")
+              q-btn(dense flat round color="blue" field="edit" label="Редактировать" @click="parking_form=true; parking=props.row")
+          template(#body-cell-action_del="props")
             q-td
-              div( v-html="props.row.comment")
+              //- q-btn(dense flat round color="red" field="edit" label="Удалить" @click="deleteObject(props.row.id)")
 
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
@@ -76,6 +75,14 @@
               label="Создать"
               color="primary"
               v-on:click="createParking()"
+              v-if="!parking.id"
+            )
+            q-btn(
+              flat
+              label="Обновить"
+              color="primary"
+              v-on:click="editObject()"
+              v-else
             )
             q-btn(
               flat
@@ -112,6 +119,12 @@ export default {
         comment: ''
       },
       columns: [
+        {
+          name: 'action',
+          align: 'left',
+          label: 'Редактировать',
+          field: 'action'
+        },
         {
           name: 'id',
           align: 'left',
@@ -150,7 +163,13 @@ export default {
           align: 'left',
           field: 'comment',
           sortable: true
-        }
+        },
+        {
+          name: 'action_del',
+          align: 'left',
+          label: 'Удалить',
+          field: 'action_del'
+        },
       ],
       loading: false,
       pagination: {
@@ -195,6 +214,20 @@ export default {
         if (error.response.status > 400 && error.response.status < 405) {
           console.log(error.response)
         }
+      })
+    },
+    editObject() {
+      const vm = this
+      vm.Axios.patch(`/api/parking/${vm.parking.id}/`, vm.parking).then(response => {
+        vm.parking_form = false
+        vm.update_data()
+      })
+    },
+    deleteObject(id){
+      const vm = this
+      vm.Axios.delete(`/api/parking/${id}/`).then(response => {
+        vm.parking_form = false
+        vm.update_data()
       })
     },
     createParking () {
