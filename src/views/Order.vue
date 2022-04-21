@@ -123,12 +123,22 @@
             style="max-width: 250px")
 
         div.col-md-3
-          q-input(
-            filled
-            v-model="data.client.phone"
-            label="Телефон"
-            fill-mask
-            style="max-width: 250px")
+          a(
+            :href="'tel:' + data.client.phone"
+            style="text-decoration: none!important;"
+            )
+            q-btn(
+              style="text-decoration: none!important;"
+              color="primary" 
+              icon="phone" 
+              :label="data.client.phone"
+            )
+          //- q-input(
+          //-   filled
+          //-   v-model="data.client.phone"
+          //-   label="Телефон"
+          //-   fill-mask
+          //-   style="max-width: 250px")
 
         div.col-md-3
           q-input(
