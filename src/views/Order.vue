@@ -62,7 +62,8 @@
             type="number"
             label="Цена для клиента"
             filled
-            style="max-width: 250px")
+            style="max-width: 250px"
+            )
 
         div.col-md-3
           q-input(
@@ -414,4 +415,17 @@ export default {
   .q-field__control .q-field__append:nth-child(3) {
     display: none;
   }
+@media (max-width: 768px) {
+  .col-md-3, .col-md-6 {
+    margin: 0 auto 15px;
+    width: auto;
+  }
+  .q-page-container {
+    text-align: center;
+  }
+  label.q-input, label.q-textarea {
+    width: 250px;
+  }
+}
+
 </style>
