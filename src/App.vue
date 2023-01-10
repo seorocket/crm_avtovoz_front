@@ -31,6 +31,7 @@
                 q-item(clickable v-ripple to="/account")
                   q-item-section Мой аккаунт
 
+
         div(class="text-h5" style="margin-left: 20px;") Avtovoz CRM
         q-icon(name="power_settings_new" @click="logOut()")
       q-tabs(align="left")
@@ -44,14 +45,14 @@
             @click="$store.dispatch('closeTab', t)"
             :key="'close_' + t")
     q-drawer(
-        v-model="drawer"
-        show-if-above
-        :mini="miniStateDrawer"
-        @click.capture="drawerClick"
-        :width="200"
-        :breakpoint="500"
-        bordered
-        content-class="bg-grey-3")
+      v-model="drawer"
+      show-if-above
+      :mini="miniStateDrawer"
+      @click.capture="drawerClick"
+      :width="200"
+      :breakpoint="500"
+      bordered
+      content-class="bg-grey-3")
 
       q-scroll-area(class="fit")
         q-list(padding)
@@ -95,17 +96,18 @@
               q-icon(name="person")
             q-item-section Мой аккаунт
 
+
           <!--q-item(clickable v-ripple to="/stat")-->
-            <!--q-item-section(avatar)-->
-              <!--q-icon(name="bar_chart")-->
-                <!--q-item-section Статистика-->
+          <!--q-item-section(avatar)-->
+          <!--q-icon(name="bar_chart")-->
+          <!--q-item-section Статистика-->
     q-page-container
       router-view
 
     q-dialog(
       v-model="dialog"
       persistent
-      )
+    )
       q-card
         q-card-section(class="row items-center")
           span(class="q-ml-sm text-h6") Авторизация
@@ -134,14 +136,14 @@
               label="Войти"
               color="primary"
               type="submit"
-              )
+            )
 </template>
 <script>
 
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
-  data () {
+  data() {
     return {
       login: {
         username: '',
@@ -151,7 +153,7 @@ export default {
       drawer: false
     }
   },
-  'token' (event) {
+  'token'(event) {
     if (event === '') {
       this.dialog = true
     }
@@ -164,7 +166,7 @@ export default {
       'axios'
     ])
   },
-  beforeMount () {
+  beforeMount() {
     if (this.token) {
       this.dialog = false
     } else {
@@ -173,7 +175,7 @@ export default {
     this.Axios.defaults.headers.common.Authorization = 'JWT ' + this.token
   },
   methods: {
-    drawerClick (e) {
+    drawerClick(e) {
       // if in "mini" state and user
       // click on drawer, we switch it to "normal" mode
       if (this.miniState) {
@@ -184,7 +186,7 @@ export default {
         e.stopPropagation()
       }
     },
-    showNotify (position, message, color) {
+    showNotify(position, message, color) {
       this.$q.notify({
         color: color,
         textColor: 'white',
@@ -193,12 +195,12 @@ export default {
         timeout: 3000
       })
     },
-    logOut () {
+    logOut() {
       const vm = this
       vm.$store.dispatch('authorize_user', {operator: null, token: undefined})
       vm.dialog = true
     },
-    authorization () {
+    authorization() {
       const vm = this
       vm.Axios.post('/api/api-token-auth/', vm.login).then(response => {
         let token = response.data.token
@@ -213,11 +215,11 @@ export default {
 }
 </script>
 <style>
-  .q-tabs__content .q-btn.q-btn-item {
-    position: relative;
-    font-size: 0.8em;
-    top: -14px;
-    margin-left: -19.2px;
-    cursor: pointer;
-  }
+.q-tabs__content .q-btn.q-btn-item {
+  position: relative;
+  font-size: 0.8em;
+  top: -14px;
+  margin-left: -19.2px;
+  cursor: pointer;
+}
 </style>

@@ -6,12 +6,26 @@
       q-btn.q-mb-md(color="primary" label="Добавить город" @click="city_form = true")
     template
       div(class="q-pa-md")
+        div.row
+          q-input.q-mb-md.col-3.q-mr-md(
+            outlined
+            v-model="search_from"
+            label="Откуда"
+            style="width: 350px"
+          )
+          q-input.q-mb-md.col-3(
+            outlined
+            v-model="search_to"
+            label="Куда"
+            style="width: 350px"
+          )
         q-table(
           class="my-sticky-dynamic"
           title="Стоимость доставки"
           :data="results"
           :columns="columns"
           :loading="loading"
+          no-data-label="Данные отсутствуют"
           row-key="id"
           virtual-scroll
           :virtual-scroll-item-size="48"
@@ -22,159 +36,161 @@
           style="height: 410px;"
         )
           template(#body-cell-action="props")
+
             q-td
               q-btn(dense flat round color="blue" field="edit" label="Изменить" @click="editPrice(props.row)")
           template(v-slot:loading)
             q-inner-loading(showing color="primary")
-
     q-dialog(
       v-model="city_form"
       persistent
-      )
+    )
       q-card
         q-card-section(class="row items-center")
           span(class="q-ml-sm text-h6") Добавить город
         q-card-section(class="row items-center")
-            q-input(
-              v-model="citys"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Город"
-              stack-label
-              autogrow
-            )
-            q-btn(
-              flat
-              label="Добавить"
-              color="primary"
-              v-on:click="addCity()"
-            )
-            q-btn(
-              flat
-              label="Отмена"
-              color="primary"
-              v-on:click="city_form = false"
-            )
+          q-input(
+            v-model="citys"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Город"
+            stack-label
+            autogrow
+          )
+          q-btn(
+            flat
+            label="Добавить"
+            color="primary"
+            v-on:click="addCity()"
+          )
+          q-btn(
+            flat
+            label="Отмена"
+            color="primary"
+            v-on:click="city_form = false"
+          )
 
     q-dialog(
       v-model="edit_price_form"
       persistent
-      )
+    )
       q-card
         q-card-section(class="row items-center")
           span(class="q-ml-sm text-h6") Редактировать стоимость
         q-card-section(class="row items-center")
-            q-input(
-              v-model="price.sedan"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Цена седан"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.jeep"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Цена джип"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.crossover"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Цена кроссовер"
-              stack-label
-              autogrow
-            )
-            q-btn(
-              flat
-              label="Обновить"
-              color="primary"
-              v-on:click="updatePrice()"
-            )
-            q-btn(
-              flat
-              label="Отмена"
-              color="primary"
-              v-on:click="edit_price_form = false"
-            )
+          q-input(
+            v-model="price.sedan"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Цена седан"
+            stack-label
+            autogrow
+          )
+          q-input(
+            v-model="price.jeep"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Цена джип"
+            stack-label
+            autogrow
+          )
+          q-input(
+            v-model="price.crossover"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Цена кроссовер"
+            stack-label
+            autogrow
+          )
+          q-btn(
+            flat
+            label="Обновить"
+            color="primary"
+            v-on:click="updatePrice()"
+          )
+          q-btn(
+            flat
+            label="Отмена"
+            color="primary"
+            v-on:click="edit_price_form = false"
+          )
 
     q-dialog(
       v-model="price_form"
       persistent
-      )
+    )
       q-card
         q-card-section(class="row items-center")
           span(class="q-ml-sm text-h6") Добавить стоимость
         q-card-section(class="row items-center")
-            q-select(
-              filled
-              v-model="price.direction_from"
-              hide-selected
-              use-input
-              fill-input
-              input-debounce="0"
-              label="Откуда"
-              :options="options_city"
-              @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              style="width: 100%; margin-bottom: 10px"
-            )
-            q-select(
-              filled
-              hide-selected
-              use-input
-              fill-input
-              input-debounce="0"
-              v-model="price.direction_to"
-              label="Куда"
-              :options="options_city"
-              @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
-              style="width: 100%; margin-bottom: 10px; padding-bottom: 0;"
-            )
-            q-input(
-              v-model="price.sedan"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Цена седан"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.jeep"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Джип"
-              stack-label
-              autogrow
-            )
-            q-input(
-              v-model="price.crossover"
-              outlined
-              style="width: 100%; margin-bottom: 10px"
-              label="Кроссовер"
-              stack-label
-              autogrow
-            )
-            q-btn(
-              flat
-              label="Создать"
-              color="primary"
-              v-on:click="createPrice()"
-            )
-            q-btn(
-              flat
-              label="Отмена"
-              color="primary"
-              v-on:click="price_form = false"
-            )
+          q-select(
+            filled
+            v-model="price.direction_from"
+            hide-selected
+            use-input
+            fill-input
+            input-debounce="0"
+            label="Откуда"
+            :options="options_city"
+            @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
+            style="width: 100%; margin-bottom: 10px"
+          )
+          q-select(
+            filled
+            hide-selected
+            use-input
+            fill-input
+            input-debounce="0"
+            v-model="price.direction_to"
+            label="Куда"
+            :options="options_city"
+            @filter="(val, update, abort) => filterFn(val, update, abort, 'cities')"
+            style="width: 100%; margin-bottom: 10px; padding-bottom: 0;"
+          )
+          q-input(
+            v-model="price.sedan"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Цена седан"
+            stack-label
+            autogrow
+          )
+          q-input(
+            v-model="price.jeep"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Джип"
+            stack-label
+            autogrow
+          )
+          q-input(
+            v-model="price.crossover"
+            outlined
+            style="width: 100%; margin-bottom: 10px"
+            label="Кроссовер"
+            stack-label
+            autogrow
+          )
+          q-btn(
+            flat
+            label="Создать"
+            color="primary"
+            v-on:click="createPrice()"
+          )
+          q-btn(
+            flat
+            label="Отмена"
+            color="primary"
+            v-on:click="price_form = false"
+          )
+
 </template>
 <script>
-import { mapState } from 'vuex'
-import { date } from 'quasar'
+import {mapState} from 'vuex'
+import {date} from 'quasar'
+
 export default {
-  data () {
+  data() {
     return {
       price_form: false,
       edit_price_form: false,
@@ -257,7 +273,10 @@ export default {
         page: 1,
         rowsPerPage: 30,
         max: 5
-      }
+      },
+      search_from: '',
+      search_to: '',
+      city_temp: []
     }
   },
   computed: {
@@ -266,28 +285,34 @@ export default {
     ])
   },
   watch: {
-    'token' (event) {
+    'token'(event) {
       const vm = this
       vm.update_data()
+    },
+    'search_from'(event) {
+      this.filter_from(event)
+    },
+    'search_to'(event) {
+      this.filter_to(event)
     }
   },
-  beforeMount () {
+  beforeMount() {
     const vm = this
     this.loading = true
     vm.update_data()
     vm.get_city_opt()
   },
   methods: {
-    get_city_opt () {
+    get_city_opt() {
       const vm = this
       vm.Axios.get('/api/cities/').then(response => {
         const data = response.data.results
         for (const item in data) {
-          vm.options_city.push({ label: data[item].name, value: data[item].pk })
+          vm.options_city.push({label: data[item].name, value: data[item].pk})
         }
       })
     },
-    update_data (nextpage = '/api/city-price/', update = false) {
+    update_data(nextpage = '/api/city-price/', update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
@@ -296,11 +321,12 @@ export default {
           vm.results = vm.results.concat(vm.page_settings.results)
         } else {
           vm.results = vm.page_settings.results
+          vm.city_temp = vm.page_settings.results
         }
         vm.loading = false
       })
     },
-    editPrice (row) {
+    editPrice(row) {
       const vm = this
       vm.price.pk = row.pk
       vm.price.sedan = row.sedan
@@ -308,7 +334,7 @@ export default {
       vm.price.crossover = row.crossover
       vm.edit_price_form = true
     },
-    updatePrice () {
+    updatePrice() {
       const vm = this
       vm.Axios.patch(`/api/city-price/${vm.price.pk}/`, vm.price).then(response => {
         vm.edit_price_form = false
@@ -320,7 +346,7 @@ export default {
         vm.showNotify('top-right', 'Данные обновлены', 'positive')
       })
     },
-    showNotify (position, message, color) {
+    showNotify(position, message, color) {
       this.$q.notify({
         color: color,
         textColor: 'white',
@@ -329,19 +355,19 @@ export default {
         timeout: 3000
       })
     },
-    addCity () {
+    addCity() {
       const vm = this
-      vm.Axios.post('/api/cities/', { name: vm.citys }).then(response => {
+      vm.Axios.post('/api/cities/', {name: vm.citys}).then(response => {
         vm.city_form = false
         vm.citys = ''
         vm.showNotify('top-right', 'Данные добавлены', 'positive')
         vm.get_city_opt()
       })
     },
-    createPrice () {
+    createPrice() {
       const vm = this
       for (let key in vm.price) {
-        if (typeof(vm.price[key]) == 'object') {
+        if (typeof (vm.price[key]) == 'object') {
           vm.price[key] = vm.price[key].value
         }
       }
@@ -351,15 +377,15 @@ export default {
         vm.showNotify('top-right', 'Данные добавлены', 'positive')
       })
     },
-    openTab (evt, row, index) {
+    openTab(evt, row, index) {
       this.$store.dispatch('addOpenTab', row.id)
     },
-    onScroll ({ to, ref }) {
+    onScroll({to, ref}) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
       const lastIndex = vm.results.length - 1
-      if (vm.loading !== true && nextPage < lastPage && to === lastIndex) {
+      if (vm.loading !== true && nextPage < lastPage && to === lastIndex && to !== -1) {
         this.loading = true
         this.$nextTick(() => {
           setTimeout(function () {
@@ -369,7 +395,7 @@ export default {
         })
       }
     },
-    filterFn (val, update, abort, url) {
+    filterFn(val, update, abort, url) {
       const vm = this
       setTimeout(() => {
         if (val.length < 2) {
@@ -382,18 +408,58 @@ export default {
           } else {
             const needle = val.toLowerCase()
             vm.Axios.get('/api/' + url + '/?name=' + needle).then(response => {
-              vm.options_city = response.data.results.map(v => ({ label: v.name, value: v.pk }))
+              vm.options_city = response.data.results.map(v => ({label: v.name, value: v.pk}))
             })
           }
         })
       }, 250)
+    },
+    filter_from(val) {
+      const vm = this
+      var filter = RegExp(`^${val.toLowerCase()}`)
+      if (vm.search_to !== '') {
+        var filterTo = RegExp(`^${vm.search_to.toLowerCase()}`)
+      }
+      if (val !== '') {
+        if (vm.search_to !== '') {
+          vm.results = vm.city_temp.filter(i => filter.exec(i.from_to.split(' --> ')[0].toLowerCase()) && filterTo.exec(i.from_to.split(' --> ')[1].toLowerCase()))
+        } else {
+          vm.results = vm.city_temp.filter(i => filter.exec(i.from_to.split(' --> ')[0].toLowerCase()))
+        }
+      } else {
+        if (vm.search_to !== '') {
+          vm.results = vm.city_temp.filter(i => filterTo.exec(i.from_to.split(' --> ')[1].toLowerCase()))
+        } else {
+          vm.results = vm.city_temp
+        }
+      }
+    },
+    filter_to(val) {
+      const vm = this
+      var filter = RegExp(`^${val.toLowerCase()}`)
+      if (vm.search_from !== '') {
+        var filterFrom = RegExp(`^${vm.search_from.toLowerCase()}`)
+      }
+      if (val !== '') {
+        if (vm.search_from !== '') {
+          vm.results = vm.city_temp.filter(i => filter.exec(i.from_to.split(' --> ')[1].toLowerCase()) && filterFrom.exec(i.from_to.split(' --> ')[0].toLowerCase()))
+        } else {
+          vm.results = vm.city_temp.filter(i => filter.exec(i.from_to.split(' --> ')[1].toLowerCase()))
+        }
+      } else {
+        if (vm.search_from !== '') {
+          vm.results = vm.city_temp.filter(i => filterFrom.exec(i.from_to.split(' --> ')[0].toLowerCase()))
+        } else {
+          vm.results = vm.city_temp
+        }
+      }
     }
   }
 }
 </script>
 
 <style>
-  .row.q-col-gutter-none .q-field__label {
-    font-size: 14px;
-  }
+.row.q-col-gutter-none .q-field__label {
+  font-size: 14px;
+}
 </style>

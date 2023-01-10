@@ -7,7 +7,7 @@ import router from '../router/index.js'
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.prototype.Axios = Axios
-Vue.prototype.Axios.defaults.baseURL = 'https://autoirr.ru/'
+Vue.prototype.Axios.defaults.baseURL = process.env.VUE_APP_BASE_API
 Vue.use(Vuex)
 
 export default new Vuex.Store({
