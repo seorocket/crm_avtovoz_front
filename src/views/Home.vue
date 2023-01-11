@@ -1,17 +1,18 @@
 <template lang="pug">
   div(class="q-pa-md")
     div(class="q-pa-md q-gutter-sm")
-      h5 Рейтинг
+      //q-icon(name="star")
+      h5 Рейтинги и статусы
       template(v-for="b in rate_count")
         q-btn(
           color="white"
           text-color="black"
           :key="b.name"
-          :label="`${b.name}: (${b.rate})`"
           v-on:click="filter_orders_rate(b.type)"
+          class="mr-btn"
+          icon="star"
+          :label="`${b.name}`"
         )
-      br
-      h5 Статусы
       template(v-for="b in statuses")
         q-btn(
           color="white"
@@ -19,19 +20,20 @@
           :key="b.name"
           :label="`${b.name} ${ b.alias ? '(' + page_settings.counts[b.alias] + ')' : ''}`"
           v-on:click="filter_orders(b.id)"
+          class="mr-btn"
         )
       template
         h5 Фильтры
         form(@submit.prevent="filterOrdersStr()" method="post" id="login" style="min-width: 400px")
           div.row.q-col-gutter-none
-            div.col-md-2.q-pa-sm
+            div.col-md-1.q-pa-sm
               q-input(
                 v-model="order_filters.id"
                 type="text"
                 label="ID заявки"
                 filled
                 style="width: 100%")
-            div.col-md-2.q-pa-sm
+            div.col-md-1.q-pa-sm
               q-input(
                 v-model="order_filters.car"
                 type="text"
@@ -59,9 +61,7 @@
                 label="Телефон"
                 filled
                 style="width: 100%")
-
-          div.row.q-col-gutter-none
-            div.col-md-2.q-pa-sm
+            div.col-md-1.q-pa-sm
               q-input(filled label="Дата от" v-model="order_filters.dt_start")
                 template(v-slot:prepend)
                   q-icon(name="event" class="cursor-pointer")
@@ -69,15 +69,13 @@
                       q-date(v-model="order_filters.dt_start" mask="YYYY-MM-DD HH:mm")
                         div(class="row items-center justify-end")
                           q-btn(v-close-popup label="Закрыть" color="primary" flat)
-
                 template(v-slot:append)
                   q-icon(name="access_time" class="cursor-pointer")
                     q-popup-proxy(transition-show="scale" transition-hide="scale")
                       q-time(v-model="order_filters.dt_start" mask="YYYY-MM-DD HH:mm" format24h)
                         div(class="row items-center justify-end")
                           q-btn(v-close-popup label="Закрыть" color="primary" flat)
-
-            div.col-md-2.q-pa-sm
+            div.col-md-1.q-pa-sm
               q-input(filled label="Дата до" v-model="order_filters.dt_end")
                 template(v-slot:prepend)
                   q-icon(name="event" class="cursor-pointer")
@@ -93,8 +91,8 @@
                         div(class="row items-center justify-end")
                           q-btn(v-close-popup label="Закрыть" color="primary" flat)
 
-          div.col-md-2.q-pa-sm
-            q-btn(color="primary" type="submit" label="Применить фильтры" @click="filterOrdersStr()")
+            div.col-md-2.q-pa-sm
+              q-btn(color="primary" type="submit" label="Применить фильтры" @click="filterOrdersStr()")
     template
       div(class="q-pa-md")
         q-table(
@@ -123,10 +121,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { date } from 'quasar'
+import {mapState} from 'vuex'
+import {date} from 'quasar'
+
 export default {
-  data () {
+  data() {
     return {
       page_settings: {
         next: null,
@@ -158,61 +157,61 @@ export default {
         id: 1,
         alias: 'new'
       },
-      {
-        name: 'С звонка',
-        id: 8,
-        alias: 'from_call'
-      },
-      {
-        name: 'В работе',
-        id: 10,
-        alias: 'work'
-      },
-      {
-        name: 'Расчёт цены',
-        id: 2,
-        alias: 'price_calculate'
-      },
-      {
-        name: 'Подписание договора',
-        id: 3,
-        alias: 'contract'
-      },
-      {
-        name: 'Первые 50%',
-        id: 4,
-        alias: 'first_fifty'
-      },
-      {
-        name: 'Завершена',
-        id: 5,
-        alias: 'ended'
-      },
-      {
-        name: 'Перезвонить',
-        id: 6,
-        alias: 'recall'
-      },
-      {
-        name: 'Не везем',
-        id: 7,
-        alias: 'archive'
-      },
-      {
-        name: 'Не верный номер',
-        id: 9,
-        alias: 'notnumber'
-      },
-      {
-        name: 'Отказ',
-        id: 11,
-        alias: 'decline'
-      }],
+        {
+          name: 'С звонка',
+          id: 8,
+          alias: 'from_call'
+        },
+        {
+          name: 'В работе',
+          id: 10,
+          alias: 'work'
+        },
+        {
+          name: 'Расчёт цены',
+          id: 2,
+          alias: 'price_calculate'
+        },
+        {
+          name: 'Подписание договора',
+          id: 3,
+          alias: 'contract'
+        },
+        {
+          name: 'Первые 50%',
+          id: 4,
+          alias: 'first_fifty'
+        },
+        {
+          name: 'Завершена',
+          id: 5,
+          alias: 'ended'
+        },
+        {
+          name: 'Перезвонить',
+          id: 6,
+          alias: 'recall'
+        },
+        {
+          name: 'Не везем',
+          id: 7,
+          alias: 'archive'
+        },
+        {
+          name: 'Не верный номер',
+          id: 9,
+          alias: 'notnumber'
+        },
+        {
+          name: 'Отказ',
+          id: 11,
+          alias: 'decline'
+        }],
       columns: [
         {
           name: 'action',
           align: 'right',
-          label: 'Action',
+          label: 'Действие',
           field: 'action'
         },
         {
@@ -228,7 +227,7 @@ export default {
           label: 'Направление',
           align: 'left',
           field: 'from_to',
-          sortable: true
+          sortable: true,
         },
         {
           name: 'rate',
@@ -285,7 +284,7 @@ export default {
         {
           name: '',
           type: 0,
-          rate: 0
+          rate: 0,
         }
       ],
       pagination: {
@@ -304,25 +303,25 @@ export default {
     ])
   },
   watch: {
-    'token' (event) {
+    'token'(event) {
       const vm = this
       vm.update_data()
     }
   },
-  beforeMount () {
+  beforeMount() {
     const vm = this
     this.loading = true
     vm.update_data()
   },
-  mounted () {
+  mounted() {
   },
   methods: {
-    filter_orders (status) {
+    filter_orders(status) {
       const vm = this
       vm.current_status = status
       vm.update_data(`/api/orders/?status=${vm.current_status}`, false)
     },
-    showNotify (position, message, color) {
+    showNotify(position, message, color) {
       this.$q.notify({
         color: color,
         textColor: 'white',
@@ -331,7 +330,7 @@ export default {
         timeout: 3000
       })
     },
-    inWorck(row){
+    inWorck(row) {
       const vm = this
       vm.Axios.post(`/api/orders/${row.id}/set_in_work/`).then(response => {
         if (response.data.status == false) {
@@ -342,12 +341,12 @@ export default {
         }
       })
     },
-    filter_orders_rate (rate) {
+    filter_orders_rate(rate) {
       const vm = this
       vm.current_rate = rate
       vm.update_data('/api/orders/?rate=' + vm.current_rate, false)
     },
-    filterOrdersStr () {
+    filterOrdersStr() {
       const vm = this
       vm.current_status = status
       let params = []
@@ -368,7 +367,7 @@ export default {
       }
       vm.update_data('/api/orders/' + params, false)
     },
-    update_data (nextpage = `/api/orders/?status=${this.current_status}`, update = false) {
+    update_data(nextpage = `/api/orders/?status=${this.current_status}`, update = false) {
       const vm = this
       vm.Axios.get(nextpage).then(response => {
         vm.page_settings = response.data
@@ -391,10 +390,12 @@ export default {
         }
       })
       vm.Axios.get('/api/orders/get_count_rate/').then(response => {
+        console.log(response.data)
+
         vm.rate_count = response.data
       })
     },
-    onScroll ({ to, ref }) {
+    onScroll({to, ref}) {
       const vm = this
       const lastPage = Math.ceil(vm.page_settings.count / vm.page_settings.per_page)
       const nextPage = Math.ceil(vm.results.length / vm.page_settings.per_page)
@@ -409,17 +410,32 @@ export default {
         })
       }
     },
-    openTab (row) {
+    openTab(row) {
       this.$store.dispatch('addOpenTab', row.id)
     }
   }
 }
 </script>
 <style>
-  .row.q-col-gutter-none .q-field__label {
-    font-size: 14px;
-  }
-  h5 {
-    margin-bottom: 0;
-  }
+.row.q-col-gutter-none .q-field__label {
+  font-size: 14px;
+}
+
+h5 {
+  margin-bottom: 0;
+}
+
+.mr-btn {
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.q-table tbody td {
+  padding: 0 10px;
+  height: 28px;
+}
+
+span.block {
+  text-transform: none;
+}
 </style>
